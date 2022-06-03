@@ -21,11 +21,16 @@ def get_links():
         for i, _ in enumerate(links):
             recipe_category = requests.get(links[i]).text
             cat_soup = BeautifulSoup(recipe_category, 'lxml')  # category page
-            most_CARDS = cat_soup.find('div', class_=CAT_STRING)
-            for a in most_CARDS.find_all('a', class_=CARDS_STRING, href=True):
+            most_popular = cat_soup.find('div', class_=CAT_STRING)
+            for a in most_popular.find_all('a', class_=CARDS_STRING, href=True):
                 if re.search('https://www.allrecipes.com/recipe/.*', a['href']):
                     pop_recipes.append(a['href'])
 
     df = pd.DataFrame(pop_recipes, columns=["link"])
     df.to_csv('list.csv', index=False)
     return df
+
+
+#df = get_links()
+
+df
