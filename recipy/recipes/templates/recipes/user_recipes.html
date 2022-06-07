@@ -1,5 +1,6 @@
 {% extends "recipy/base.html" %}
 {% block content %}
+    <h1 class="mb-3">recipes by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1>
     {% for recipe in recipes %}
         <article class="media content-section">
             <img class="rounded-cricle article-img"
@@ -12,7 +13,9 @@
                 <h2>
                     <a class="article-title" href="{% url 'recipe-detail' recipe.id %}">{{ recipe.title }}</a>
                 </h2>
-                <p class="article-content">{{ recipe.content }}</p>
+                <p class="article-content">{{ recipe.description }}</p>
+                <p class="article-content">{{ recipe.ingredients }}</p>
+                <p class="article-content">{{ recipe.instructions }}</p>
             </div>
         </article>
     {% endfor %}
@@ -37,3 +40,4 @@
         {% endif %}
     {% endif %}
 {% endblock content %}
+~

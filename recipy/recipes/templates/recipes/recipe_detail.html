@@ -1,0 +1,41 @@
+{% extends "recipy/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <article class="media content-section">
+        <img class="rounded-cricle article-img"
+             src="{{ object.author.profile.image.url }}">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="{% url 'user-recipe' object.author.username %}">{{ object.author }}</a>
+                <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
+                {% if object.author == user %}
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1"
+                           href="{% url 'recipe-update' object.id %}">Update</a>
+                        <a class="btn btn-danger btn-sm mt-1 mb-1"
+                           href="{% url 'recipe-delete' object.id %}">Delete</a>
+                    </div>
+                {% endif %}
+            </div>
+            <h2 class="article-title">{{ object.title }}</h2>
+            <p class="article-content">{{ object.description }}</p>
+            <p class="article-content">{{ object.ingredients }}</p>
+            <p class="article-content">{{ object.instructions }}</p>
+        </div>
+    </article>
+    {% if not recipe.comments.all %}
+        <p>No Comments Yet</p>
+        <a href="#">Add a comment</a>
+    {% else %}
+        {% for comment in object.comments.all %}
+            <article class="media content-section">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <strong >{{ comment.name }} - {{ comment.date_posted|date:"F d, Y" }}</strong>
+                    </div>
+                    {{ comment.body }}
+                </div>
+            </article>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}
