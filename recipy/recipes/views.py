@@ -1,13 +1,15 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic.edit import FormMixin
 from django.contrib.auth.models import User
 from django.views.generic import (ListView,
                                   DetailView,
                                   CreateView,
                                   UpdateView,
                                   DeleteView)
-from .models import Recipe
-
+from .models import Recipe, Comment
+from .forms import CommentForm
+from django.urls import reverse
 # Class based Views (CBVs)
 # DEFAULTS:
 # template_name: <app>/<model>_<viewtype>.html (lowercase)
@@ -33,8 +35,29 @@ class UserRecipeListView(ListView):
         return Recipe.objects.filter(author=user).order_by('-date_posted')
 
 
-class RecipeDetailView(DetailView):
+class RecipeDetailView(FormMixin, DetailView):
     model = Recipe
+    form_class = CommentForm
+
+    def get_success_url(self):
+        return reverse('recipe-detail', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeDetailView, self).get_context_data(**kwargs)
+        context['form'] = CommentForm(initial={'recipe': self.object})
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.save()
+        return super(RecipeDetailView, self).form_valid(form)
 
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
