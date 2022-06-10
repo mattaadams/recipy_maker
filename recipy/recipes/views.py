@@ -21,14 +21,14 @@ class RecipeListView(ListView):
     template_name = 'recipes/home.html'
     context_object_name = 'recipes'
     ordering = ['-date_posted']
-    paginate_by = 5
+    paginate_by = 12
 
 
 class UserRecipeListView(ListView):
     model = Recipe
     template_name = 'recipes/user_recipes.html'
     context_object_name = 'recipes'
-    paginate_by = 5
+    paginate_by = 12
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
