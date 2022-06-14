@@ -9,7 +9,6 @@ class Recipe(models.Model):
     title = models.CharField(max_length=120)
     image = models.ImageField(default='default_food.png', upload_to='recipe_pics')
     description = models.TextField()
-    ingredients = models.TextField()
     instructions = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -28,6 +27,16 @@ class Recipe(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+
+class Ingredient(models.Model):
+    recipe = models.ForeignKey(Recipe, related_name="ingredients", on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    quantity = models.CharField(max_length=50)
+    unit = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Comment(models.Model):

@@ -5,7 +5,11 @@
         {% for recipe in recipes %}
             <div class="col-6">
                 <div class="card">
-                    {{ recipe.title }}
+                    <a href="{% url 'recipe-detail' recipe.id %}"
+                       title
+                       class="card-image hover-overlay">
+                        <img src="{{ recipe.image.url }}" class="img-responsive">
+                    </a>
                     <div class="card-text">
                         <h4>
                             <a href="{% url 'recipe-detail' recipe.id %}">{{ recipe.title }}</a>

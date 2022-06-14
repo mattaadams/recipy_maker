@@ -7,9 +7,12 @@ from django.views.generic import (ListView,
                                   CreateView,
                                   UpdateView,
                                   DeleteView)
-from .models import Recipe, Comment
-from .forms import CommentForm
+from .models import Recipe, Comment, Ingredient
+from .forms import CommentForm, RecipeForm, IngredientForm, RecipeInlineFormSet
 from django.urls import reverse
+from django.http import HttpResponseRedirect
+
+
 # Class based Views (CBVs)
 # DEFAULTS:
 # template_name: <app>/<model>_<viewtype>.html (lowercase)
@@ -62,20 +65,80 @@ class RecipeDetailView(FormMixin, DetailView):
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
-    fields = ['title', 'image', 'description', 'ingredients', 'instructions']
+    form_class = RecipeForm
 
-    def form_valid(self, form):
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        ingredient_form = RecipeInlineFormSet()
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                ingredient_form=ingredient_form))
+
+    def post(self, request, *args, **kwargs):
+
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        ingredient_form = RecipeInlineFormSet(self.request.POST)
+        if (form.is_valid() and ingredient_form.is_valid()):
+            return self.form_valid(form, ingredient_form)
+        else:
+            return self.form_invalid(form, ingredient_form)
+
+    def form_valid(self, form, ingredient_form):
         form.instance.author = self.request.user
+        self.object = form.save()
+        ingredient_form.instance = self.object
+        ingredient_form.save()
         return super().form_valid(form)
+
+    def form_invalid(self, form, ingredient_form):
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                ingredient_form=ingredient_form))
 
 
 class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Recipe
-    fields = ['title', 'image', 'description', 'ingredients', 'instructions']
+    form_class = RecipeForm
 
-    def form_valid(self, form):
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        ingredient_form = RecipeInlineFormSet()
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                ingredient_form=ingredient_form))
+
+    def post(self, request, *args, **kwargs):
+
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        ingredient_form = RecipeInlineFormSet(self.request.POST)
+        if (form.is_valid() and ingredient_form.is_valid()):
+            return self.form_valid(form, ingredient_form)
+        else:
+            return self.form_invalid(form, ingredient_form)
+
+    def form_valid(self, form, ingredient_form):
         form.instance.author = self.request.user
+        self.object = form.save()
+        ingredient_form.instance = self.object
+        ingredient_form.save()
         return super().form_valid(form)
+
+    def form_invalid(self, form, ingredient_form):
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                ingredient_form=ingredient_form))
 
     def test_func(self):
         recipe = self.get_object()

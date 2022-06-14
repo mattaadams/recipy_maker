@@ -19,8 +19,22 @@
             </div>
             <h2 class="article-title">{{ object.title }}</h2>
             <img src="{{ object.image.url }}" class="img-responsive">
+            <h2 class="article-title">Description</h2>
+            <hr/>
             <p class="article-content">{{ object.description }}</p>
-            <p class="article-content">{{ object.ingredients }}</p>
+            <h2 class="article-title">Ingredients</h2>
+            <hr/>
+            <table class="table">
+                <tbody>
+                    {% for ingredient in object.ingredients.all %}
+                        <tr>
+                            <td>{{ ingredient.quantity }} {{ ingredient.unit }} {{ ingredient.name }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h2 class="article-title">Instructions</h2>
+            <hr/>
             <p class="article-content">{{ object.instructions }}</p>
         </div>
     </article>
