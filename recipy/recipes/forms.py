@@ -30,7 +30,7 @@ RecipeInlineFormSet = inlineformset_factory(
     Recipe,
     Ingredient,
     form=IngredientForm,
-    extra=1,
+    extra=2,
     can_delete=False,
     can_order=False
 )

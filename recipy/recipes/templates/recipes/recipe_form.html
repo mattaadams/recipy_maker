@@ -10,12 +10,9 @@
                 </legend>
                 {{ form|crispy }}
             </fieldset>
-            <fieldset>
-                <legend>
-                    Recipe Ingredients
-                </legend>
-                {{ ingredient_form }}
-            </fieldset>
+            <table>
+                {{ ingredient_form.as_table }}
+            </table>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Submit</button>
             </div>

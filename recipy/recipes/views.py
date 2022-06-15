@@ -106,22 +106,26 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Recipe
     form_class = RecipeForm
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        ingredient_form = RecipeInlineFormSet()
-        return self.render_to_response(
-            self.get_context_data(
-                form=form,
-                ingredient_form=ingredient_form))
+    def get_context_data(self, **kwargs):
+        context = super(RecipeUpdateView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['form'] = RecipeForm(self.request.POST, instance=self.object)
+            context['ingredient_form'] = RecipeInlineFormSet(self.request.POST, instance=self.object)
+
+        else:
+            context['form'] = RecipeForm(instance=self.object)
+            context['ingredient_form'] = RecipeInlineFormSet(instance=self.object)
+        return context
 
     def post(self, request, *args, **kwargs):
 
-        self.object = None
+        self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        ingredient_form = RecipeInlineFormSet(self.request.POST)
+        ingredient_form = RecipeInlineFormSet(self.request.POST, instance=self.object)
+        if ingredient_form.is_valid():
+            print('t')
+
         if (form.is_valid() and ingredient_form.is_valid()):
             return self.form_valid(form, ingredient_form)
         else:
