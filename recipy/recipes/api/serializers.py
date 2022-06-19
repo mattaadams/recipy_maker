@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from recipes.models import Recipe, Ingredient
+from recipes.models import Recipe, Ingredient, Comment
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -26,4 +26,19 @@ class RecipeSerializer(serializers.ModelSerializer):
             'description',
             'ingredients',
             'instructions',
+            'date_posted'
+        ]
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    recipe = serializers.CharField(read_only=True)
+
+    class Meta:
+
+        model = Comment
+        fields = [
+            'name',
+            'body',
+            'date_posted',
+            'recipe',
         ]

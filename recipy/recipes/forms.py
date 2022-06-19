@@ -17,6 +17,12 @@ class IngredientForm(forms.ModelForm):
     class Meta:
         model = Ingredient
         fields = ['name', 'quantity', 'unit', 'recipe']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Name'}),
+            'quantity': forms.TextInput(attrs={'placeholder': 'Quantity'}),
+            'unit': forms.TextInput(attrs={'placeholder': 'Unit'}),
+
+        }
 
 
 class RecipeForm(forms.ModelForm):
@@ -28,6 +34,15 @@ class RecipeForm(forms.ModelForm):
         labels = {
             "image": "Upload an Image (Optional)",
             "image_url": "Or paste image URL:"
+        }
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Recipe Name'}),
+            'description': forms.Textarea(
+                attrs={'placeholder': 'Enter description here'}),
+            'image_url': forms.URLInput(
+                attrs={'placeholder': 'https://'}),
+            'instructions': forms.Textarea(
+                attrs={'placeholder': 'Enter instructions here'}),
         }
 
     def __init__(self, *args, **kwargs):

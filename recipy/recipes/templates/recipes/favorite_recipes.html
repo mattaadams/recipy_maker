@@ -1,6 +1,6 @@
 {% extends "recipy/base.html" %}
 {% block content %}
-    <h1 class="mb-3">recipes by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1>
+    <h1 class="mb-3">{{ view.kwargs.username }}'s favorite recipes ({{ page_obj.paginator.count }})</h1>
     <div class="row">
         {% for recipe in recipes %}
             <div class="col-6">
@@ -52,3 +52,4 @@
         {% endif %}
     {% endif %}
 {% endblock content %}
+~

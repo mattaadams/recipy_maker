@@ -1,6 +1,9 @@
 from rest_framework.generics import ListAPIView
-from recipes.models import Recipe, Ingredient
-from .serializers import RecipeSerializer, IngredientSerializer
+from recipes.models import Recipe, Ingredient, Comment
+from .serializers import (
+    RecipeSerializer,
+    IngredientSerializer,
+    CommentSerializer)
 
 
 class RecipeListAPIView(ListAPIView):
@@ -11,3 +14,8 @@ class RecipeListAPIView(ListAPIView):
 class IngredientListAPIView(ListAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+
+
+class CommentListAPIView(ListAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer

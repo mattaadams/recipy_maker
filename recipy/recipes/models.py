@@ -8,11 +8,12 @@ from PIL import Image
 class Recipe(models.Model):
     title = models.CharField(max_length=120)
     image = models.ImageField(default='default_food.png', upload_to='recipe_pics')
-    image_url = models.URLField(max_length=300, null=True)
+    image_url = models.URLField(max_length=300, null=True, blank=True)
     description = models.TextField()
     instructions = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    favorites = models.ManyToManyField(User, related_name='favorite', default=None, blank=True)
 
     def __str__(self):
         return self.title
