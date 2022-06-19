@@ -8,4 +8,6 @@ from .views import (
 
 urlpatterns = [
     path('', RecipeListAPIView.as_view(), name='recipe-api-list'),
+    path('ingredients',  IngredientListAPIView.as_view(), name='ingredients-api-list'),
+
 ]
