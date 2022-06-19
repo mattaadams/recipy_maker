@@ -2,6 +2,16 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from recipes.models import Recipe
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
+from django.views.generic.edit import FormMixin
+from django.contrib.auth.models import User
+from django.views.generic import (ListView,
+                                  DetailView,
+                                  CreateView,
+                                  UpdateView,
+                                  DeleteView)
+from django.shortcuts import render, get_object_or_404
 
 
 def register(request):
@@ -40,3 +50,13 @@ def profile(request):
     }
 
     return render(request, 'users/profile.html', context)
+
+
+class FavoriteRecipeListView(LoginRequiredMixin, ListView):
+    model = Recipe
+    template_name = 'users/favorites.html'
+    context_object_name = 'recipes'
+    paginate_by = 12
+
+    def get_queryset(self):
+        return Recipe.objects.filter(favorites=self.request.user).order_by('-date_posted')

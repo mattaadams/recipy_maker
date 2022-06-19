@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.views.generic.edit import FormMixin
 from django.contrib.auth.models import User
 from django.views.generic import (ListView,
@@ -29,6 +29,8 @@ def favorite_add(request, id):
         recipe.favorites.add(request.user)
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
+# class FavoriteAddView(LoginRequiredMixin, TemplateView):
+
 
 class RecipeListView(ListView):
     model = Recipe
@@ -38,7 +40,7 @@ class RecipeListView(ListView):
     paginate_by = 12
 
 
-class FavoriteRecipeListView(ListView):
+class FavoriteRecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
     template_name = 'recipes/favorite_recipes.html'
     context_object_name = 'recipes'
@@ -46,7 +48,7 @@ class FavoriteRecipeListView(ListView):
 
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
-        return Recipe.objects.filter(favorites=user).order_by('-date_posted')
+        return Recipe.objects.filter(favorites=request.user.id).order_by('-date_posted')
 
 
 class UserRecipeListView(ListView):

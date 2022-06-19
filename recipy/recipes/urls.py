@@ -11,7 +11,6 @@ from recipes import views as recipe_views
 urlpatterns = [
     path('', RecipeListView.as_view(), name='recipe-home'),
     path('user/<username>', UserRecipeListView.as_view(), name='user-recipe'),
-    path('favorites/<username>', FavoriteRecipeListView.as_view(), name='favorite-recipe'),
     path('recipe/<int:pk>/', RecipeDetailView.as_view(), name='recipe-detail'),
     path('recipe/new/', RecipeCreateView.as_view(), name='recipe-create'),
     path('recipe/<int:pk>/update', RecipeUpdateView.as_view(), name='recipe-update'),
