@@ -18,7 +18,11 @@
                 {% endif %}
             </div>
             <h2 class="article-title">{{ object.title }}</h2>
-            <img src="{{ object.image.url }}" class="img-responsive">
+            {% if not object.image_url %}
+                <img src="{{ object.image.url }}" class="img-responsive">
+            {% else %}
+                <img src="{{ object.image_url }}" class="img-responsive">
+            {% endif %}
             <h2 class="article-title">Description</h2>
             <hr/>
             <p class="article-content">{{ object.description }}</p>

@@ -5,11 +5,19 @@
         {% for recipe in recipes %}
             <div class="col-6">
                 <div class="card">
-                    <a href="{% url 'recipe-detail' recipe.id %}"
-                       title
-                       class="card-image hover-overlay">
-                        <img src="{{ recipe.image.url }}" class="img-responsive">
-                    </a>
+                    {% if not recipe.image_url %}
+                        <a href="{% url 'recipe-detail' recipe.id %}"
+                           title
+                           class="card-image hover-overlay">
+                            <img src="{{ recipe.image.url }}" class="img-responsive">
+                        </a>
+                    {% else %}
+                        <a href="{% url 'recipe-detail' recipe.id %}"
+                           title
+                           class="card-image hover-overlay">
+                            <img src="{{ recipe.image_url }}" class="img-responsive">
+                        </a>
+                    {% endif %}
                     <div class="card-text">
                         <h4>
                             <a href="{% url 'recipe-detail' recipe.id %}">{{ recipe.title }}</a>

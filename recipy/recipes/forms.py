@@ -22,8 +22,18 @@ class IngredientForm(forms.ModelForm):
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['title', 'image', 'description', 'instructions', 'author']
+        fields = ['title', 'image', 'image_url', 'description', 'instructions', 'author']
         exclude = ['author']
+
+        labels = {
+            "image": "Upload an Image (Optional)",
+            "image_url": "Or paste image URL:"
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(RecipeForm, self).__init__(*args, **kwargs)
+        self.fields['image_url'].required = False
+        self.fields['image'].required = False
 
 
 RecipeInlineFormSet = inlineformset_factory(
