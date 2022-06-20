@@ -1,6 +1,7 @@
 {% extends "recipy/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+    <style>.hidden{display:none}</style>
     <div class="content-section">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -11,11 +12,16 @@
                 {{ form|crispy }}
             </fieldset>
             <h4>Ingredients</h4>
-            <table>
-                {{ ingredient_form.as_table }}
-            </table>
+            {% if ingredient_form %}
+                <table>
+                    {{ ingredient_form.management_form }}
+                    {% for form in ingredient_form %}{{ form }}{% endfor %}
+                </table>
+                <div id="empty-form" class="hidden">{{ ingredient_form.empty_form }}</div>
+                <button id="add-more" class="btn btn-primary btn-sm" type="button">+ Ingredient</button>
+            {% endif %}
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Submit</button>
+                <button class="btn btn-outline-primary" type="submit">Submit</button>
             </div>
         </form>
     </div>

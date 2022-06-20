@@ -8,7 +8,7 @@ from django.views.generic import (ListView,
                                   DetailView,
                                   CreateView,
                                   UpdateView,
-                                  DeleteView)
+                                  DeleteView, TemplateView)
 from .models import Recipe, Comment, Ingredient
 from .forms import CommentForm, RecipeForm, IngredientForm, RecipeInlineFormSet
 from django.urls import reverse
@@ -29,16 +29,18 @@ def favorite_add(request, id):
         recipe.favorites.add(request.user)
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
-# class FavoriteAddView(LoginRequiredMixin, TemplateView):
+
+# class FavoriteAddView(LoginRequiredMixin, ListView):
 #     model = Recipe
 #     template_name = 'recipes/recipe_detail.html'
 
-#     recipe = get_object_or_404(Recipe, id=id)
-#     if recipe.favorites.filter(id=self.request.user.id).exists():
-#         recipe.favorites.remove(self.request.user)
-#     else:
-#         recipe.favorites.add(self.request.user)
-#     return HttpResponseRedirect(request.META['HTTP_REFERER'])
+#     def dispatch(self, *args, **kwargs):
+#         recipe = self.get_object()
+#         if recipe.favorites.filter(id=self.request.user.id).exists():
+#             recipe.favorites.remove(self.request.user)
+#         else:
+#             recipe.favorites.add(self.request.user)
+#         return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
 
 
 class RecipeListView(ListView):
@@ -76,6 +78,7 @@ class RecipeDetailView(FormMixin, DetailView):
         context = super(RecipeDetailView, self).get_context_data(**kwargs)
         context['form'] = CommentForm(initial={'recipe': self.object})
         context['fav'] = self.fav
+        context['title'] = recipe.title
         return context
 
     def post(self, request, *args, **kwargs):
