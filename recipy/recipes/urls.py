@@ -4,8 +4,7 @@ from .views import (RecipeListView,
                     RecipeCreateView,
                     RecipeUpdateView,
                     RecipeDeleteView,
-                    UserRecipeListView,
-                    FavoriteRecipeListView)
+                    UserRecipeListView)
 from recipes import views as recipe_views
 
 urlpatterns = [

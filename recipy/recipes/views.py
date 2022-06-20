@@ -30,6 +30,15 @@ def favorite_add(request, id):
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 # class FavoriteAddView(LoginRequiredMixin, TemplateView):
+#     model = Recipe
+#     template_name = 'recipes/recipe_detail.html'
+
+#     recipe = get_object_or_404(Recipe, id=id)
+#     if recipe.favorites.filter(id=self.request.user.id).exists():
+#         recipe.favorites.remove(self.request.user)
+#     else:
+#         recipe.favorites.add(self.request.user)
+#     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
 class RecipeListView(ListView):
@@ -38,17 +47,6 @@ class RecipeListView(ListView):
     context_object_name = 'recipes'
     ordering = ['-date_posted']
     paginate_by = 12
-
-
-class FavoriteRecipeListView(LoginRequiredMixin, ListView):
-    model = Recipe
-    template_name = 'recipes/favorite_recipes.html'
-    context_object_name = 'recipes'
-    paginate_by = 12
-
-    def get_queryset(self):
-        user = get_object_or_404(User, username=self.kwargs.get('username'))
-        return Recipe.objects.filter(favorites=request.user.id).order_by('-date_posted')
 
 
 class UserRecipeListView(ListView):
@@ -65,13 +63,19 @@ class UserRecipeListView(ListView):
 class RecipeDetailView(FormMixin, DetailView):
     model = Recipe
     form_class = CommentForm
+    fav = False
 
     def get_success_url(self):
         return reverse('recipe-detail', kwargs={'pk': self.object.id})
 
     def get_context_data(self, **kwargs):
+        recipe = self.get_object()
+        if recipe.favorites.filter(id=self.request.user.id).exists():
+            self.fav = True
+
         context = super(RecipeDetailView, self).get_context_data(**kwargs)
         context['form'] = CommentForm(initial={'recipe': self.object})
+        context['fav'] = self.fav
         return context
 
     def post(self, request, *args, **kwargs):
