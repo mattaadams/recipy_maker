@@ -13,11 +13,11 @@
             </fieldset>
             <h4>Ingredients</h4>
             {% if ingredient_form %}
-                <table>
+                <div id='ingredient-form-list'>
                     {{ ingredient_form.management_form }}
-                    {% for form in ingredient_form %}{{ form }}{% endfor %}
-                </table>
-                <div id="empty-form" class="hidden">{{ ingredient_form.empty_form }}</div>
+                    {% for form in ingredient_form %}<div class='ingredient-form'>{{ form.as_table }}</div>{% endfor %}
+                </div>
+                <div id="empty-form" class="hidden">{{ ingredient_form.empty_form.as_table }}</div>
                 <button id="add-more" class="btn btn-primary btn-sm" type="button">+ Ingredient</button>
             {% endif %}
             <div class="form-group">
@@ -25,4 +25,6 @@
             </div>
         </form>
     </div>
+    {% load static %}
+    <script src="{% static 'recipy/js/script.js' %}"></script>
 {% endblock content %}
