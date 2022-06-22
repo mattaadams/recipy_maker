@@ -16,10 +16,10 @@ class CommentForm(forms.ModelForm):
 class IngredientForm(forms.ModelForm):
     class Meta:
         model = Ingredient
-        fields = ['name', 'quantity', 'recipe']
+        fields = ['quantity', 'name',  'recipe']
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Name'}),
-            'quantity': forms.TextInput(attrs={'placeholder': 'Quantity'}),
+            'quantity': forms.TextInput(attrs={'placeholder': 'e.g. 2 cups'}),
+            'name': forms.TextInput(attrs={'placeholder': 'e.g. Milk'}),
 
         }
 
