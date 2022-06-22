@@ -15,7 +15,7 @@ class IngredientListSerializer(serializers.ModelSerializer):
         ]
 
 
-class IngredientCreateSerializer(serializers.ModelSerializer):
+class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
     recipe = serializers.CharField(read_only=True)
 
     class Meta:
@@ -57,8 +57,8 @@ class RecipeListSerializer(serializers.ModelSerializer):
         ]
 
 
-class RecipeCreateSerializer(serializers.ModelSerializer):
-    ingredients = IngredientCreateSerializer(many=True, read_only=True)
+class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
+    ingredients = IngredientCreateUpdateSerializer(many=True, read_only=True)
 
     class Meta:
 
@@ -90,6 +90,21 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
 
 
 class CommentListSerializer(serializers.ModelSerializer):
+    recipe = serializers.CharField(read_only=True)
+
+    class Meta:
+
+        model = Comment
+        fields = [
+            'id',
+            'name',
+            'body',
+            'date_posted',
+            'recipe',
+        ]
+
+
+class CommentCreateUpdateSerializer(serializers.ModelSerializer):
     recipe = serializers.CharField(read_only=True)
 
     class Meta:

@@ -8,12 +8,13 @@ from rest_framework.generics import (
 from recipes.models import Recipe, Ingredient, Comment
 from .serializers import (
     RecipeListSerializer,
-    RecipeCreateSerializer,
+    RecipeCreateUpdateSerializer,
     RecipeDetailSerializer,
     IngredientListSerializer,
-    IngredientCreateSerializer,
+    IngredientCreateUpdateSerializer,
     IngredientDetailSerializer,
     CommentListSerializer,
+    CommentCreateUpdateSerializer,
     CommentDetailSerializer
 )
 
@@ -25,7 +26,7 @@ class RecipeListAPIView(ListAPIView):
 
 class RecipeCreateAPIView(CreateAPIView):
     queryset = Recipe.objects.all()
-    serializer_class = RecipeCreateSerializer
+    serializer_class = RecipeCreateUpdateSerializer
 
 
 class RecipeDetailAPIView(RetrieveAPIView):
@@ -35,7 +36,7 @@ class RecipeDetailAPIView(RetrieveAPIView):
 
 class RecipeUpdateAPIView(UpdateAPIView):
     queryset = Recipe.objects.all()
-    serializer_class = RecipeDetailSerializer
+    serializer_class = RecipeCreateUpdateSerializer
 
 
 class RecipeDeleteAPIView(DestroyAPIView):
@@ -50,7 +51,7 @@ class IngredientListAPIView(ListAPIView):
 
 class IngredientCreateAPIView(CreateAPIView):
     queryset = Ingredient.objects.all()
-    serializer_class = IngredientCreateSerializer
+    serializer_class = IngredientCreateUpdateSerializer
 
 
 class IngredientDetailAPIView(RetrieveAPIView):
@@ -60,7 +61,7 @@ class IngredientDetailAPIView(RetrieveAPIView):
 
 class IngredientUpdateAPIView(UpdateAPIView):
     queryset = Ingredient.objects.all()
-    serializer_class = IngredientDetailSerializer
+    serializer_class = IngredientCreateUpdateSerializer
 
 
 class IngredientDeleteAPIView(DestroyAPIView):
@@ -73,6 +74,11 @@ class CommentListAPIView(ListAPIView):
     serializer_class = CommentListSerializer
 
 
+class CommentCreateAPIView(CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentCreateUpdateSerializer
+
+
 class CommentDetailAPIView(RetrieveAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentDetailSerializer
@@ -80,7 +86,7 @@ class CommentDetailAPIView(RetrieveAPIView):
 
 class CommentUpdateAPIView(UpdateAPIView):
     queryset = Comment.objects.all()
-    serializer_class = CommentDetailSerializer
+    serializer_class = CommentCreateUpdateSerializer
 
 
 class CommentDeleteAPIView(DestroyAPIView):
