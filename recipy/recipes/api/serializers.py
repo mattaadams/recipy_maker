@@ -43,7 +43,7 @@ class IngredientDetailSerializer(serializers.ModelSerializer):
 
 class RecipeListSerializer(serializers.ModelSerializer):
     ingredients = IngredientListSerializer(many=True, read_only=True)
-    author = serializers.CharField()
+    author = serializers.CharField(read_only=True)
 
     class Meta:
 
@@ -61,7 +61,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     ingredients = IngredientCreateUpdateSerializer(many=True, read_only=True)
-    author = serializers.CharField()
+    author = serializers.CharField(read_only=True)
 
     class Meta:
 
@@ -75,12 +75,11 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             'instructions',
             'date_posted'
         ]
-        read_only_fields = ['author']
 
 
 class RecipeDetailSerializer(serializers.ModelSerializer):
     ingredients = IngredientListSerializer(many=True, read_only=True)
-    author = serializers.CharField()
+    author = serializers.CharField(read_only=True)
 
     class Meta:
 
