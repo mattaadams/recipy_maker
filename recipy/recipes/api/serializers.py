@@ -11,7 +11,7 @@ class IngredientListSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'quantity',
-            'recipe'
+            'recipe',
         ]
 
 
@@ -43,12 +43,14 @@ class IngredientDetailSerializer(serializers.ModelSerializer):
 
 class RecipeListSerializer(serializers.ModelSerializer):
     ingredients = IngredientListSerializer(many=True, read_only=True)
+    author = serializers.CharField()
 
     class Meta:
 
         model = Recipe
         fields = [
             'id',
+            'author',
             'title',
             'description',
             'ingredients',
@@ -59,28 +61,33 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     ingredients = IngredientCreateUpdateSerializer(many=True, read_only=True)
+    author = serializers.CharField()
 
     class Meta:
 
         model = Recipe
         fields = [
             'id',
+            'author',
             'title',
             'description',
             'ingredients',
             'instructions',
             'date_posted'
         ]
+        read_only_fields = ['author']
 
 
 class RecipeDetailSerializer(serializers.ModelSerializer):
     ingredients = IngredientListSerializer(many=True, read_only=True)
+    author = serializers.CharField()
 
     class Meta:
 
         model = Recipe
         fields = [
             'id',
+            'author',
             'title',
             'description',
             'ingredients',
