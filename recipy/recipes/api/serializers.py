@@ -60,7 +60,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
-    ingredients = IngredientCreateUpdateSerializer(many=True, read_only=True)
+    ingredients = IngredientCreateUpdateSerializer(many=True)
     author = serializers.CharField(read_only=True)
 
     class Meta:
