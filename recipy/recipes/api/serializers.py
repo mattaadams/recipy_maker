@@ -73,7 +73,6 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             'description',
             'ingredients',
             'instructions',
-            'date_posted'
         ]
 
 

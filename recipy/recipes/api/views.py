@@ -3,8 +3,17 @@ from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
     UpdateAPIView,
-    DestroyAPIView
+    DestroyAPIView,
+    RetrieveUpdateAPIView
 )
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated,
+    IsAdminUser,
+    IsAuthenticatedOrReadOnly,
+
+)
+from .permissions import IsOwnerOrReadOnly
 from recipes.models import Recipe, Ingredient, Comment
 from .serializers import (
     RecipeListSerializer,
@@ -27,6 +36,7 @@ class RecipeListAPIView(ListAPIView):
 class RecipeCreateAPIView(CreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeCreateUpdateSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -37,14 +47,19 @@ class RecipeDetailAPIView(RetrieveAPIView):
     serializer_class = RecipeDetailSerializer
 
 
-class RecipeUpdateAPIView(UpdateAPIView):
+class RecipeUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeCreateUpdateSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def perform_update(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class RecipeDeleteAPIView(DestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeDetailSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class IngredientListAPIView(ListAPIView):
@@ -55,6 +70,7 @@ class IngredientListAPIView(ListAPIView):
 class IngredientCreateAPIView(CreateAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientCreateUpdateSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class IngredientDetailAPIView(RetrieveAPIView):
@@ -62,14 +78,16 @@ class IngredientDetailAPIView(RetrieveAPIView):
     serializer_class = IngredientDetailSerializer
 
 
-class IngredientUpdateAPIView(UpdateAPIView):
+class IngredientUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientCreateUpdateSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class IngredientDeleteAPIView(DestroyAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientDetailSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class CommentListAPIView(ListAPIView):
@@ -80,6 +98,7 @@ class CommentListAPIView(ListAPIView):
 class CommentCreateAPIView(CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentCreateUpdateSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class CommentDetailAPIView(RetrieveAPIView):
@@ -87,11 +106,13 @@ class CommentDetailAPIView(RetrieveAPIView):
     serializer_class = CommentDetailSerializer
 
 
-class CommentUpdateAPIView(UpdateAPIView):
+class CommentUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentCreateUpdateSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class CommentDeleteAPIView(DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentDetailSerializer
+    permission_classes = [IsAuthenticated]
