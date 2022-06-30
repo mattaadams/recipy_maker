@@ -4,6 +4,7 @@ from recipes.models import Recipe, Ingredient, Comment
 
 class IngredientListSerializer(serializers.ModelSerializer):
     recipe = serializers.CharField(read_only=True)
+    author = serializers.CharField(source="recipe.author", read_only=True)
 
     class Meta:
         model = Ingredient
@@ -12,11 +13,13 @@ class IngredientListSerializer(serializers.ModelSerializer):
             'name',
             'quantity',
             'recipe',
+            'author'
         ]
 
 
 class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
     recipe = serializers.CharField(read_only=True)
+    author = serializers.CharField(source="recipe.author", read_only=True)
 
     class Meta:
         model = Ingredient
@@ -24,12 +27,15 @@ class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'quantity',
-            'recipe'
+            'recipe',
+            'author'
+
         ]
 
 
 class IngredientDetailSerializer(serializers.ModelSerializer):
     recipe = serializers.CharField(read_only=True)
+    author = serializers.CharField(source="recipe.author", read_only=True)
 
     class Meta:
         model = Ingredient
@@ -37,7 +43,8 @@ class IngredientDetailSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'quantity',
-            'recipe'
+            'recipe',
+            'author'
         ]
 
 
