@@ -1,5 +1,9 @@
 from rest_framework.permissions import BasePermission
 
+# how to get obj keys
+# example: obj default returns id, but want obj.ingredient.author
+# if obj key == ingredient check obj.author = user, else check if obj.ingredient.author = user
+
 
 class IsOwnerOrReadOnly(BasePermission):
     message = 'You must be the owner of this object.'
