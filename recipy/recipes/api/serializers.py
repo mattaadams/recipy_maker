@@ -11,7 +11,7 @@ class IngredientListSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'quantity',
+            # 'quantity',
             'recipe',
             'author'
         ]
@@ -26,7 +26,7 @@ class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'quantity',
+            # 'quantity',
             'recipe',
             'author'
 
@@ -42,7 +42,7 @@ class IngredientDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'quantity',
+            # 'quantity',
             'recipe',
             'author'
         ]
