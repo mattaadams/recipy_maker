@@ -67,7 +67,7 @@
     {% else %}
         <div class="content-section">
             <p>
-                <a href="{% url 'login' %}">Login</a> to comment
+                <a href="{% url 'login' %}?next={% firstof request.path '/' %}">Login</a> to comment
             </p>
         </div>
     {% endif %}
