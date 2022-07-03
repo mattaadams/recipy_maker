@@ -41,9 +41,9 @@ class Ingredient(models.Model):
 
 
 class Comment(models.Model):
+    author = models.ForeignKey(User, related_name="comments", on_delete=models.CASCADE, default=1)
     recipe = models.ForeignKey(Recipe, related_name="comments", on_delete=models.CASCADE)
-    #author = models.ForeignKey(User, related_name="comments", on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    #name = models.CharField(max_length=255)
     body = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
 

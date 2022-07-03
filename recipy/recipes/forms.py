@@ -6,10 +6,15 @@ from django.forms import inlineformset_factory
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['name', 'body', 'recipe']
+        fields = ['body', 'recipe']
+        labels = {
+            'body': 'New comment',
+        }
 
         widgets = {
             'recipe': forms.TextInput(attrs={'type': 'hidden'}),
+            'body': forms.Textarea(attrs={'rows': 1, 'cols': 2}),
+
         }
 
 

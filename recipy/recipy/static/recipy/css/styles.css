@@ -887,3 +887,7 @@ nav#navbar-main li {
     display: block !important;
   }
 }
+
+.media-body {
+  word-break: break-all;
+}
