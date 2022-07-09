@@ -69,6 +69,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     ingredients = IngredientCreateUpdateSerializer(many=True)
     author = serializers.CharField(read_only=True)
+    image_url = serializers.URLField(allow_blank=True, default=None)
 
     class Meta:
 
@@ -77,6 +78,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             'id',
             'author',
             'title',
+            'image_url',
             'description',
             'ingredients',
             'instructions',
