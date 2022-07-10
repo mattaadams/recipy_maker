@@ -8,6 +8,7 @@ from PIL import Image
 class Recipe(models.Model):
     title = models.CharField(max_length=120)
     image = models.ImageField(default='default_food.png', upload_to='recipe_pics')
+    # Slug
     image_url = models.URLField(max_length=300, null=True, blank=True)
     description = models.TextField()
     instructions = models.TextField()
