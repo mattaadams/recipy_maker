@@ -8,7 +8,9 @@ from django.views.generic import (ListView,
                                   DetailView,
                                   CreateView,
                                   UpdateView,
-                                  DeleteView, TemplateView)
+                                  DeleteView,
+                                  TemplateView,
+                                  RedirectView)
 from .models import Recipe, Comment, Ingredient
 from .forms import CommentForm, RecipeForm, IngredientForm, RecipeInlineFormSet
 from django.urls import reverse
@@ -19,28 +21,6 @@ from django.http import HttpResponseRedirect
 # DEFAULTS:
 # template_name: <app>/<model>_<viewtype>.html (lowercase)
 # context_object_name: object_list
-
-@login_required
-def favorite_add(request, id):
-    recipe = get_object_or_404(Recipe, id=id)
-    if recipe.favorites.filter(id=request.user.id).exists():
-        recipe.favorites.remove(request.user)
-    else:
-        recipe.favorites.add(request.user)
-    return HttpResponseRedirect(request.META['HTTP_REFERER'])
-
-
-# class FavoriteAddView(LoginRequiredMixin, ListView):
-#     model = Recipe
-#     template_name = 'recipes/recipe_detail.html'
-
-#     def dispatch(self, *args, **kwargs):
-#         recipe = self.get_object()
-#         if recipe.favorites.filter(id=self.request.user.id).exists():
-#             recipe.favorites.remove(self.request.user)
-#         else:
-#             recipe.favorites.add(self.request.user)
-#         return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
 
 
 class RecipeListView(ListView):
@@ -60,6 +40,27 @@ class UserRecipeListView(ListView):
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Recipe.objects.filter(author=user).order_by('-date_posted')
+
+
+# @login_required
+# def favorite_add(request, id):
+#     recipe = get_object_or_404(Recipe, id=id)
+#
+#     return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class FavoriteAddView(LoginRequiredMixin, RedirectView):
+    model = Recipe
+    template_name = 'recipes/recipe_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        recipe = Recipe.objects.get(id=kwargs['id'])
+
+        if recipe.favorites.filter(id=request.user.id).exists():
+            recipe.favorites.remove(request.user)
+        else:
+            recipe.favorites.add(request.user)
+        return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
 
 
 class RecipeDetailView(FormMixin, DetailView):
@@ -154,9 +155,6 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         ingredient_form = RecipeInlineFormSet(self.request.POST, instance=self.object)
-        if ingredient_form.is_valid():
-            print('t')
-
         if (form.is_valid() and ingredient_form.is_valid()):
             return self.form_valid(form, ingredient_form)
         else:
