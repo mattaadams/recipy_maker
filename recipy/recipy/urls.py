@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('users.urls')),
     path('', include('recipes.urls')),
     path('api/recipes/', include('recipes.api.urls')),
+    path('api/users/', include('users.api.urls')),
 
 ]
 

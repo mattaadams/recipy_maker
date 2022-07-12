@@ -14,7 +14,7 @@ class Recipe(models.Model):
     instructions = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    favorites = models.ManyToManyField(User, related_name='favorite', default=None, blank=True)
+    favorites = models.ManyToManyField(User, related_name='favorites', default=None, blank=True)
 
     def __str__(self):
         return self.title
