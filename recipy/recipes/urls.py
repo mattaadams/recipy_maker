@@ -16,5 +16,4 @@ urlpatterns = [
     path('recipe/<int:pk>/update', RecipeUpdateView.as_view(), name='recipe-update'),
     path('recipe/<int:pk>/delete', RecipeDeleteView.as_view(), name='recipe-delete'),
     path('fav/<int:id>/', FavoriteAddView.as_view(), name='favorite-add')
-    #path('fav/<int:id>/', recipe_views.favorite_add, name='favorite-add')
 ]

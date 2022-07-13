@@ -10,7 +10,7 @@ from django.views.generic import (ListView,
                                   UpdateView,
                                   DeleteView,
                                   TemplateView,
-                                  RedirectView)
+                                  View)
 from .models import Recipe, Comment, Ingredient
 from .forms import CommentForm, RecipeForm, IngredientForm, RecipeInlineFormSet
 from django.urls import reverse
@@ -22,6 +22,8 @@ from django.http import HttpResponseRedirect
 # template_name: <app>/<model>_<viewtype>.html (lowercase)
 # context_object_name: object_list
 
+# Check django docs to see which methods are in generic views
+# ex. View does not have get_object()
 
 class RecipeListView(ListView):
     model = Recipe
@@ -42,24 +44,16 @@ class UserRecipeListView(ListView):
         return Recipe.objects.filter(author=user).order_by('-date_posted')
 
 
-# @login_required
-# def favorite_add(request, id):
-#     recipe = get_object_or_404(Recipe, id=id)
-#
-#     return HttpResponseRedirect(request.META['HTTP_REFERER'])
-
-
-class FavoriteAddView(LoginRequiredMixin, RedirectView):
-    model = Recipe
+class FavoriteAddView(LoginRequiredMixin, View):
     template_name = 'recipes/recipe_detail.html'
 
     def get(self, request, *args, **kwargs):
         recipe = Recipe.objects.get(id=kwargs['id'])
 
-        if recipe.favorites.filter(id=request.user.id).exists():
-            recipe.favorites.remove(request.user)
+        if recipe.favorites.filter(id=self.request.user.id).exists():
+            recipe.favorites.remove(self.request.user)
         else:
-            recipe.favorites.add(request.user)
+            recipe.favorites.add(self.request.user)
         return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
 
 
