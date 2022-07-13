@@ -44,11 +44,25 @@ class UserRecipeListView(ListView):
         return Recipe.objects.filter(author=user).order_by('-date_posted')
 
 
-class FavoriteAddView(LoginRequiredMixin, View):
+# replaced by below, keeping as ref..
+# class FavoriteAddView(LoginRequiredMixin, View):
+#     template_name = 'recipes/recipe_detail.html'
+
+#     def get(self, request, *args, **kwargs):
+#         recipe = Recipe.objects.get(id=kwargs['id'])
+
+#         if recipe.favorites.filter(id=self.request.user.id).exists():
+#             recipe.favorites.remove(self.request.user)
+#         else:
+#             recipe.favorites.add(self.request.user)
+#         return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
+
+class FavoriteAddView(LoginRequiredMixin, DetailView):
     template_name = 'recipes/recipe_detail.html'
+    model = Recipe
 
     def get(self, request, *args, **kwargs):
-        recipe = Recipe.objects.get(id=kwargs['id'])
+        recipe = self.get_object()
 
         if recipe.favorites.filter(id=self.request.user.id).exists():
             recipe.favorites.remove(self.request.user)
