@@ -17,16 +17,31 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Recipe API",
+        default_version='1.0.0',
+        description="API doc of recipy"
+
+    ),
+    public=True,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('', include('recipes.urls')),
-    path('api/recipes/', include('recipes.api.urls')),
-    path('api/users/', include('users.api.urls')),
-
-]
+    path(
+        'api/',
+        include(
+            [path('swagger/schema', schema_view.with_ui('swagger', cache_timeout=0),
+                  name="swagger-schema"),
+             path('recipes/', include('recipes.api.urls'), name='recipes-api'),
+             path('users/', include('users.api.urls'), name='users-api'), ]))]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -11,7 +11,6 @@ class IngredientListSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            # 'quantity',
             'recipe',
             'author'
         ]
@@ -26,7 +25,6 @@ class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            # 'quantity',
             'recipe',
             'author'
 
@@ -42,7 +40,6 @@ class IngredientDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            # 'quantity',
             'recipe',
             'author'
         ]
@@ -112,13 +109,14 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
 
 class CommentListSerializer(serializers.ModelSerializer):
     recipe = serializers.CharField(read_only=True)
+    author = serializers.CharField(source="recipe.author", read_only=True)
 
     class Meta:
 
         model = Comment
         fields = [
             'id',
-            'name',
+            'author',
             'body',
             'date_posted',
             'recipe',
@@ -127,13 +125,14 @@ class CommentListSerializer(serializers.ModelSerializer):
 
 class CommentCreateUpdateSerializer(serializers.ModelSerializer):
     recipe = serializers.CharField(read_only=True)
+    author = serializers.CharField(source="recipe.author", read_only=True)
 
     class Meta:
 
         model = Comment
         fields = [
             'id',
-            'name',
+            'author',
             'body',
             'date_posted',
             'recipe',
@@ -142,13 +141,14 @@ class CommentCreateUpdateSerializer(serializers.ModelSerializer):
 
 class CommentDetailSerializer(serializers.ModelSerializer):
     recipe = serializers.CharField(read_only=True)
+    author = serializers.CharField(source="recipe.author", read_only=True)
 
     class Meta:
 
         model = Comment
         fields = [
             'id',
-            'name',
+            'author',
             'body',
             'date_posted',
             'recipe',
