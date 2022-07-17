@@ -17,7 +17,10 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 
 )
-from .permissions import IsOwnerOrReadOnly, IsParentOwnerOrReadOnly
+from .permissions import (
+    IsOwnerOrReadOnly,
+    IsParentOwnerOrReadOnly,
+    IsCommentOwnerOrReadOnly)
 from recipes.models import Recipe, Ingredient, Comment
 from .serializers import (
     RecipeListSerializer,
@@ -73,7 +76,7 @@ class RecipeUpdateAPIView(RetrieveUpdateAPIView):
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)
 
-    @swagger_auto_schema(tags=['Recipes'])
+    @swagger_auto_schema(tags=['Recipes'], auto_schema=None)
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
@@ -95,7 +98,7 @@ class RecipeDeleteAPIView(RetrieveDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-    @swagger_auto_schema(tags=['Recipes'])
+    @swagger_auto_schema(tags=['Recipes'], auto_schema=None)
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
@@ -144,7 +147,7 @@ class IngredientUpdateAPIView(RetrieveUpdateAPIView):
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)
 
-    @swagger_auto_schema(tags=['Ingredients'])
+    @swagger_auto_schema(tags=['Ingredients'], auto_schema=None)
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
@@ -166,7 +169,7 @@ class IngredientDeleteAPIView(RetrieveDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-    @swagger_auto_schema(tags=['Ingredients'])
+    @swagger_auto_schema(tags=['Ingredients'], auto_schema=None)
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
@@ -208,9 +211,9 @@ class CommentDetailAPIView(RetrieveAPIView):
 class CommentUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentCreateUpdateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsCommentOwnerOrReadOnly]
 
-    @swagger_auto_schema(tags=['Comments'])
+    @swagger_auto_schema(tags=['Comments'], auto_schema=None)
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
@@ -226,13 +229,12 @@ class CommentUpdateAPIView(RetrieveUpdateAPIView):
 class CommentDeleteAPIView(DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentDetailSerializer
-    permission_classes = [IsAuthenticated]\
-
+    permission_classes = [IsAuthenticated, IsCommentOwnerOrReadOnly]
 
     @swagger_auto_schema(tags=['Comments'])
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-    @swagger_auto_schema(tags=['Comments'])
+    @swagger_auto_schema(tags=['Comments'], auto_schema=None)
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)

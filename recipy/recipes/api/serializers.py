@@ -3,7 +3,7 @@ from recipes.models import Recipe, Ingredient, Comment
 
 
 class IngredientListSerializer(serializers.ModelSerializer):
-    recipe = serializers.CharField(read_only=True)
+    recipe_title = serializers.CharField(source="recipe.title", read_only=True)
     author = serializers.CharField(source="recipe.author", read_only=True)
 
     class Meta:
@@ -12,12 +12,13 @@ class IngredientListSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'recipe',
+            'recipe_title',
             'author'
         ]
 
 
 class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
-    recipe = serializers.CharField(read_only=True)
+    recipe_title = serializers.CharField(source="recipe.title", read_only=True)
     author = serializers.CharField(source="recipe.author", read_only=True)
 
     class Meta:
@@ -26,13 +27,14 @@ class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'recipe',
+            'recipe_title',
             'author'
 
         ]
 
 
 class IngredientDetailSerializer(serializers.ModelSerializer):
-    recipe = serializers.CharField(read_only=True)
+    recipe_title = serializers.CharField(source="recipe.title", read_only=True)
     author = serializers.CharField(source="recipe.author", read_only=True)
 
     class Meta:
@@ -41,6 +43,7 @@ class IngredientDetailSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'recipe',
+            'recipe_title',
             'author'
         ]
 
@@ -88,6 +91,21 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             Ingredient.objects.create(recipe=recipe, **ingredient_data)
         return recipe
 
+    def update(self, instance, validated_data):
+        ingredients_data = validated_data.pop('ingredients')
+        ingredients = list(instance.ingredients.all())
+
+        instance.id = validated_data.get('id', instance.id)
+        instance.save()
+
+        # many ingredients
+        for ingredient_data in ingredients_data:
+            ingredient = ingredients.pop(0)
+            ingredient.name = ingredient_data.get('name', ingredient.name)
+            ingredient.save()
+
+        return instance
+
 
 class RecipeDetailSerializer(serializers.ModelSerializer):
     ingredients = IngredientListSerializer(many=True, read_only=True)
@@ -108,8 +126,7 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
 
 
 class CommentListSerializer(serializers.ModelSerializer):
-    recipe = serializers.CharField(read_only=True)
-    author = serializers.CharField(source="recipe.author", read_only=True)
+    author = serializers.CharField(read_only=True)
 
     class Meta:
 
@@ -119,13 +136,12 @@ class CommentListSerializer(serializers.ModelSerializer):
             'author',
             'body',
             'date_posted',
-            'recipe',
+            'recipe'
         ]
 
 
 class CommentCreateUpdateSerializer(serializers.ModelSerializer):
-    recipe = serializers.CharField(read_only=True)
-    author = serializers.CharField(source="recipe.author", read_only=True)
+    author = serializers.CharField(read_only=True)
 
     class Meta:
 
@@ -134,14 +150,12 @@ class CommentCreateUpdateSerializer(serializers.ModelSerializer):
             'id',
             'author',
             'body',
-            'date_posted',
-            'recipe',
+            'recipe'
         ]
 
 
 class CommentDetailSerializer(serializers.ModelSerializer):
-    recipe = serializers.CharField(read_only=True)
-    author = serializers.CharField(source="recipe.author", read_only=True)
+    author = serializers.CharField(read_only=True)
 
     class Meta:
 
@@ -151,5 +165,5 @@ class CommentDetailSerializer(serializers.ModelSerializer):
             'author',
             'body',
             'date_posted',
-            'recipe',
+            'recipe'
         ]

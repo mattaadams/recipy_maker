@@ -35,7 +35,6 @@ class Recipe(models.Model):
 class Ingredient(models.Model):
     recipe = models.ForeignKey(Recipe, related_name="ingredients", on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    # quantity = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.name}"
@@ -44,7 +43,6 @@ class Ingredient(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(User, related_name="comments", on_delete=models.CASCADE, default=1)
     recipe = models.ForeignKey(Recipe, related_name="comments", on_delete=models.CASCADE)
-    #name = models.CharField(max_length=255)
     body = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
 
