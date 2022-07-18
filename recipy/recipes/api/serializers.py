@@ -17,19 +17,13 @@ class IngredientListSerializer(serializers.ModelSerializer):
 
 
 class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False, write_only=False)
-    recipe_title = serializers.CharField(source="recipe.title", read_only=True)
-    author = serializers.CharField(source="recipe.author", read_only=True)
-    recipe = serializers.IntegerField(source="recipe.id", read_only=True)
+    id = serializers.IntegerField(required=False)
 
     class Meta:
         model = Ingredient
         fields = [
             'id',
             'name',
-            'recipe',
-            'recipe_title',
-            'author'
 
         ]
 
@@ -70,7 +64,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     ingredients = IngredientCreateUpdateSerializer(many=True)
     author = serializers.CharField(read_only=True)
-    image_url = serializers.URLField(allow_blank=True, default=None)
+    image_url = serializers.URLField(required=False, allow_blank=True, default=None)
 
     class Meta:
 
@@ -93,20 +87,21 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        ingredient_data = validated_data.pop("ingredients")
+        ingredients_data = validated_data.pop("ingredients")
 
         remove_items = {item.id: item for item in instance.ingredients.all()}
 
-        for item in ingredient_data:
-            item_id = item.get("id", None)
+        for ingredient_data in ingredients_data:
+            item_id = ingredient_data.get("id", None)
 
             if item_id is None:
                 # new item so create this
-                instance.ingredients.create(**item)
+                instance.ingredients.create(**ingredient_data)
             elif remove_items.get(item_id, None) is not None:
                 # update this item
                 instance_item = remove_items.pop(item_id)
-                Ingredient.objects.filter(id=instance_item.id).update(**item)
+
+                Ingredient.objects.filter(id=instance_item.id).update(**ingredient_data)
 
         for item in remove_items.values():
             item.delete()

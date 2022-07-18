@@ -18,9 +18,19 @@ from rest_framework.permissions import (
 )
 from django.contrib.auth.models import User
 from .serializers import (
+    UserCreateSerializer,
     UserListSerializer,
     UserDetailSerializer
 )
+
+
+class UserCreateAPIView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserCreateSerializer
+
+    @swagger_auto_schema(tags=['Users'])
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class UserListAPIView(ListAPIView):
