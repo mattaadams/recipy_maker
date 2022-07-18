@@ -112,17 +112,17 @@ class IngredientListAPIView(ListAPIView):
         return self.list(request, *args, **kwargs)
 
 
-class IngredientCreateAPIView(CreateAPIView):
-    queryset = Ingredient.objects.all()
-    serializer_class = IngredientCreateUpdateSerializer
-    permission_classes = [IsAuthenticated]
+# class IngredientCreateAPIView(CreateAPIView):
+#     queryset = Ingredient.objects.all()
+#     serializer_class = IngredientCreateUpdateSerializer
+#     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(tags=['Ingredients'])
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+#     @swagger_auto_schema(tags=['Ingredients'])
+#     def post(self, request, *args, **kwargs):
+#         return self.create(request, *args, **kwargs)
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+#     def perform_create(self, serializer):
+#         serializer.save(author=self.request.user)
 
 
 class IngredientDetailAPIView(RetrieveAPIView):
@@ -139,44 +139,44 @@ class IngredientDetailAPIView(RetrieveAPIView):
         return self.retrieve(request, *args, **kwargs)
 
 
-class IngredientUpdateAPIView(RetrieveUpdateAPIView):
-    queryset = Ingredient.objects.all()
-    serializer_class = IngredientCreateUpdateSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsParentOwnerOrReadOnly]
+# class IngredientUpdateAPIView(RetrieveUpdateAPIView):
+#     queryset = Ingredient.objects.all()
+#     serializer_class = IngredientCreateUpdateSerializer
+#     permission_classes = [IsAuthenticatedOrReadOnly, IsParentOwnerOrReadOnly]
 
-    def perform_update(self, serializer):
-        serializer.save(author=self.request.user)
+#     def perform_update(self, serializer):
+#         serializer.save(author=self.request.user)
 
-    @swagger_auto_schema(tags=['Ingredients'], auto_schema=None)
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+#     @swagger_auto_schema(tags=['Ingredients'], auto_schema=None)
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
 
-    @swagger_auto_schema(tags=['Ingredients'])
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
+#     @swagger_auto_schema(tags=['Ingredients'])
+#     def patch(self, request, *args, **kwargs):
+#         return self.partial_update(request, *args, **kwargs)
 
-    @swagger_auto_schema(tags=['Ingredients'])
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+#     @swagger_auto_schema(tags=['Ingredients'])
+#     def put(self, request, *args, **kwargs):
+#         return self.update(request, *args, **kwargs)
 
 
-class IngredientDeleteAPIView(RetrieveDestroyAPIView):
-    queryset = Ingredient.objects.all()
-    serializer_class = IngredientDetailSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsParentOwnerOrReadOnly]
+# class IngredientDeleteAPIView(RetrieveDestroyAPIView):
+#     queryset = Ingredient.objects.all()
+#     serializer_class = IngredientDetailSerializer
+#     permission_classes = [IsAuthenticatedOrReadOnly, IsParentOwnerOrReadOnly]
 
-    @swagger_auto_schema(tags=['Ingredients'])
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+#     @swagger_auto_schema(tags=['Ingredients'])
+#     def delete(self, request, *args, **kwargs):
+#         return self.destroy(request, *args, **kwargs)
 
-    @swagger_auto_schema(tags=['Ingredients'], auto_schema=None)
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+#     @swagger_auto_schema(tags=['Ingredients'], auto_schema=None)
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
 
-    def get_object(self):
-        obj = super().get_object()
-        print(obj)
-        return obj
+#     def get_object(self):
+#         obj = super().get_object()
+#         print(obj)
+#         return obj
 
 
 class CommentListAPIView(ListAPIView):
