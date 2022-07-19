@@ -23,7 +23,7 @@ from drf_yasg.views import get_schema_view
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Recipe API",
+        title="ReciPy API",
         default_version='1.0.0',
         description="API doc of recipy"
 

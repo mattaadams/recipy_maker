@@ -78,10 +78,13 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 
         ingredients_data = validated_data.pop("ingredients")   # updated data
-        print(ingredients_data)
+        # print(ingredients_data)
         remove_items = {item.id: item for item in instance.ingredients.all()}  # old data
+        # print(remove_items)
 
-        for i, ingredient_data in enumerate(ingredients_data):
+        # maybe try to form something using both validated data and remove items
+
+        for ingredient_data in ingredients_data:
             item_id = ingredient_data.get("id", None)
 
             if item_id is None:
