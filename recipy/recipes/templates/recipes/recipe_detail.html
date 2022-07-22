@@ -76,19 +76,30 @@
     {% else %}
         {% for comment in object.comments.all %}
             <article class="media content-section">
-                <div class="media-body">
+                <div id="comment_details_{{ comment.id }}"class="media-body">
                     <div class="article-metadata">
-                        <strong ><b>{{ comment.author }}</b> | {{ comment.date_posted|date:"F d, Y" }}</strong>
-                    </div>
-                    {{ comment.body }}
-                    {% if comment.author == user %}
+                        <p>
+                            <strong><b>{{ comment.author }}</b> | {{ comment.date_posted|date:"F d, Y" }}</strong>
+                        </p>
+                        <span>{{ comment.body }}</span>
+                        {% if comment.author == user %}
+                        </div>
                         <div>
-                            <a class="small" href="#">Edit</a> |
-                            <a class="small" href="#">Delete</a>
+                            <button class="small btn-secondary"
+                                    hx-get="{% url 'comment-edit' pk=comment.id recipe_id=comment.recipe.id %}"
+                                    hx-target="#comment_details_{{ comment.id }}">
+                                Edit
+                            </button>
+                            <button class="small btn-danger" href="#">Delete</button>
                         </div>
                     </div>
                 {% endif %}
             </article>
         {% endfor %}
     {% endif %}
+    <script>
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        })
+    </script>
 {% endblock content %}

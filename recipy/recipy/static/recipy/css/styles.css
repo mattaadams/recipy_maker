@@ -889,5 +889,5 @@ nav#navbar-main li {
 }
 
 .media-body {
-  word-break: break-all;
+  word-break: keep-all;
 }

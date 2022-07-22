@@ -12,7 +12,7 @@ from django.views.generic import (ListView,
                                   TemplateView,
                                   View)
 from .models import Recipe, Comment, Ingredient
-from .forms import CommentForm, RecipeForm, IngredientForm, RecipeInlineFormSet
+from .forms import UpdateCommentForm, CommentForm, RecipeForm, IngredientForm, RecipeInlineFormSet
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 
@@ -101,6 +101,16 @@ class RecipeDetailView(FormMixin, DetailView):
     def form_valid(self, form):
         form.save()
         return super(RecipeDetailView, self).form_valid(form)
+
+
+def comment_edit_form(request, pk, recipe_id):
+    comment = get_object_or_404(Comment, pk=pk)
+    form = UpdateCommentForm(instance=comment)
+    context = {}
+    context['comment'] = comment
+    context['recipe_id'] = recipe_id
+    context['form'] = form
+    return render(request, "recipes/partials/edit_comment_form.html", context)
 
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):

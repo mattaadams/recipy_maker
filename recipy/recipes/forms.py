@@ -18,6 +18,21 @@ class CommentForm(forms.ModelForm):
         }
 
 
+class UpdateCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body', 'recipe']
+        labels = {
+            'body': 'Update comment',
+        }
+
+        widgets = {
+            'recipe': forms.TextInput(attrs={'type': 'hidden'}),
+            'body': forms.Textarea(attrs={'rows': 1, 'cols': 2}),
+
+        }
+
+
 class IngredientForm(forms.ModelForm):
     class Meta:
         model = Ingredient
