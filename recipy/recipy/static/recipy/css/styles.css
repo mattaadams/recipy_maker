@@ -739,9 +739,13 @@ nav#navbar-main li {
 }
 
 .dropdown-menu {
-  background-color: #cc790c !important;
+  background-color: #0b6dff !important;
+  color: #ffffff !important;
 }
 
+.dropdown-item {
+  color: #ffffff !important;
+}
 .dropdown-menu > li > a {
   display: block;
   padding: 3px 20px;

@@ -3,7 +3,7 @@
     <h1 class="mb-3">Favorite recipes ({{ page_obj.paginator.count }})</h1>
     <div class="row">
         {% for recipe in recipes %}
-            <div class="col-6">
+            <div class="col-md-4">
                 <div class="card">
                     {% if not recipe.image_url %}
                         <a href="{% url 'recipe-detail' recipe.id %}"
