@@ -1,6 +1,6 @@
 {% load crispy_forms_tags %}
 
-<form hx-put="{% url 'recipe-detail' comment.recipe.id %}" hx-target="#comment_details_{{comment.id}}">
+<form hx-put="{% url 'recipe-detail' comment.id  %}" hx-target="#comment_details_{{comment.id}}">
   {% csrf_token %} {{ form|crispy }}
 
   <input class="small btn-secondary" type="submit" />

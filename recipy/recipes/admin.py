@@ -8,7 +8,7 @@ admin.site.register(Comment)
 
 class RecipeIngredientInline(admin.StackedInline):
     model = Ingredient
-    fields = ['name', 'quantity', 'unit']
+    fields = ['name']
 
 
 class RecipeAdmin(admin.ModelAdmin):

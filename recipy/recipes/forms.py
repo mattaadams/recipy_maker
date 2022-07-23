@@ -13,7 +13,7 @@ class CommentForm(forms.ModelForm):
 
         widgets = {
             'recipe': forms.TextInput(attrs={'type': 'hidden'}),
-            'body': forms.Textarea(attrs={'rows': 1, 'cols': 2}),
+            'body': forms.Textarea(attrs={'rows': 2, 'cols': 2}),
 
         }
 
@@ -28,7 +28,7 @@ class UpdateCommentForm(forms.ModelForm):
 
         widgets = {
             'recipe': forms.TextInput(attrs={'type': 'hidden'}),
-            'body': forms.Textarea(attrs={'rows': 1, 'cols': 2}),
+            'body': forms.Textarea(attrs={'rows': 2, 'cols': 2}),
 
         }
 

@@ -50,4 +50,4 @@ class Comment(models.Model):
         ordering = ['-date_posted']
 
     def __str__(self):
-        return f"{self.recipe.title} - {self.name}"
+        return f"{self.recipe} - {self.id} - {self.author}"

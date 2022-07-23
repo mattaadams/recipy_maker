@@ -1,0 +1,19 @@
+<div class="article-metadata">
+  <p>
+    <strong><b>{{ comment.author }}</b> | {{ comment.date_posted|date:"F d, Y" }}</strong>
+  </p>
+  <!-- <span>{{object.title}}</span> -->
+  <span>{{ comment.body }}</span>
+  {% if comment.author == user %}
+</div>
+<div>
+  <button
+    class="small btn-secondary"
+    hx-get="{% url 'comment-edit' pk=comment.id recipe_id=comment.recipe.id %}"
+    hx-target="#comment_details_{{ comment.id }}"
+  >
+    Edit
+  </button>
+  <button class="small btn-danger" href="#">Delete</button>
+  {% endif %}
+</div>

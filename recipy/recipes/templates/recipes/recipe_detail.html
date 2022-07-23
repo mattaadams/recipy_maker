@@ -76,24 +76,7 @@
     {% else %}
         {% for comment in object.comments.all %}
             <article class="media content-section">
-                <div id="comment_details_{{ comment.id }}"class="media-body">
-                    <div class="article-metadata">
-                        <p>
-                            <strong><b>{{ comment.author }}</b> | {{ comment.date_posted|date:"F d, Y" }}</strong>
-                        </p>
-                        <span>{{ comment.body }}</span>
-                        {% if comment.author == user %}
-                        </div>
-                        <div>
-                            <button class="small btn-secondary"
-                                    hx-get="{% url 'comment-edit' pk=comment.id recipe_id=comment.recipe.id %}"
-                                    hx-target="#comment_details_{{ comment.id }}">
-                                Edit
-                            </button>
-                            <button class="small btn-danger" href="#">Delete</button>
-                        </div>
-                    </div>
-                {% endif %}
+                <div id="comment_details_{{ comment.id }}"class="media-body">{% include 'recipes/partials/comment_detail.html' %}</div>
             </article>
         {% endfor %}
     {% endif %}

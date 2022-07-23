@@ -14,7 +14,7 @@ from django.views.generic import (ListView,
 from .models import Recipe, Comment, Ingredient
 from .forms import UpdateCommentForm, CommentForm, RecipeForm, IngredientForm, RecipeInlineFormSet
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, QueryDict, HttpResponse
 
 
 # Class based Views (CBVs)
@@ -101,6 +101,44 @@ class RecipeDetailView(FormMixin, DetailView):
     def form_valid(self, form):
         form.save()
         return super(RecipeDetailView, self).form_valid(form)
+
+    def put(self, request, *args, **kwargs):
+        data = QueryDict(self.request.body).dict()
+        comment = Comment.objects.get(id=kwargs['pk'])
+        context = {'comment': comment}
+        form = CommentForm(data, instance=comment)
+        if form.is_valid():
+            form.save()
+            return render(self.request, 'recipes/partials/comment_detail.html', context)
+        context['form'] = form
+        return render(self.request, 'recipes/partials/edit_comment_form.html', context)
+
+
+# class RecipeCommentDetailView(DetailView):
+#     model = Comment
+#     template_name = 'recipes/recipe_detail.html'
+#     context_object_name = 'recipes'
+#     paginate_by = 100
+
+#     def get_queryset(self):
+#         recipe = get_object_or_404(Recipe, recipe=self.kwargs.get('recipe'))
+#         return Comment.objects.filter(recipe=recipe).order_by('-date_posted')
+
+
+# def comment_detail(request, pk, recipe_id):
+#     comment = get_object_or_404(Comment, pk=pk)
+#     context = {'comment': comment}
+#     context['recipe_id'] = recipe_id
+#     print('t')
+#     if request.method == 'GET':
+#         return render(request, 'recipes/partials/_detail.html', context)
+#     elif request.method == 'PUT':
+#         data = QueryDict(self.request.body).dict()
+#         form = UpdateCommentForm(data, instance=comment)
+#         if form.is_valid():
+#             print('valid')
+#             # form.save()
+#             return render(self.request, 'recipes/partials/comment_detail.html', context)
 
 
 def comment_edit_form(request, pk, recipe_id):
