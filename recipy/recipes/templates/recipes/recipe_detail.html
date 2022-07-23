@@ -28,9 +28,9 @@
                 {% endif %}
             </h2>
             {% if not object.image_url %}
-                <img src="{{ object.image.url }}" class="img-responsive">
+                <img src="{{ object.image.url }}" class="rounded mx-auto d-block">
             {% else %}
-                <img src="{{ object.image_url }}" class="img-responsive">
+                <img src="{{ object.image_url }}" class="rounded mx-auto d-block">
             {% endif %}
             <h2 class="article-title">Description</h2>
             <hr/>
