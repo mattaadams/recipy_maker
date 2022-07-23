@@ -13,6 +13,7 @@ urlpatterns = [
     path('', RecipeListView.as_view(), name='recipe-home'),
     path('user/<username>', UserRecipeListView.as_view(), name='user-recipe'),
     path('recipe/<int:pk>/', RecipeDetailView.as_view(), name='recipe-detail'),
+    path('recipe/<int:recipe_id>/comment/<int:pk>/', recipe_views.comment_detail, name='comment-detail'),
     path('recipe/<int:recipe_id>/comment/<int:pk>/edit', recipe_views.comment_edit_form, name='comment-edit'),
     path('recipe/<int:recipe_id>/comment/<int:pk>/delete', recipe_views.comment_delete, name='comment-delete'),
     path('recipe/new/', RecipeCreateView.as_view(), name='recipe-create'),

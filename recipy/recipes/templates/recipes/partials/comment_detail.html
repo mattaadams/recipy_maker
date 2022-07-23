@@ -1,5 +1,5 @@
 {% if comment != None %}
-  <div class="article-metadata">
+  <div id="comment_article_{{ comment.id }}" class="article-metadata">
     <p>
       <strong><b>{{ comment.author }}</b> | {{ comment.date_posted|date:"F d, Y" }}</strong>
     </p>

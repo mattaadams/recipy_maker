@@ -43,7 +43,6 @@ class UserRecipeListView(ListView):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Recipe.objects.filter(author=user).order_by('-date_posted')
 
-
 # replaced by below, keeping as ref..
 # class FavoriteAddView(LoginRequiredMixin, View):
 #     template_name = 'recipes/recipe_detail.html'
@@ -56,6 +55,7 @@ class UserRecipeListView(ListView):
 #         else:
 #             recipe.favorites.add(self.request.user)
 #         return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
+
 
 class FavoriteAddView(LoginRequiredMixin, DetailView):
     template_name = 'recipes/recipe_detail.html'
@@ -120,31 +120,27 @@ class RecipeDetailView(FormMixin, DetailView):
         return render(self.request, 'recipes/partials/comment_detail.html', context)
 
 
-# class RecipeCommentListView(ListView):
-#     model = Comment
-#     template_name = 'recipes/recipe_detail.html'
-#     context_object_name = 'recipes'
-#     paginate_by = 100
+def comment_detail(request, pk, recipe_id):
+    comment = get_object_or_404(Comment, pk=pk)
+    form = UpdateCommentForm(instance=comment)
+    context = {}
+    context['comment'] = comment
+    context['recipe_id'] = recipe_id
+    if request.method == 'GET':
+        return render(request, 'recipes/partials/_detail.html', context)
+    elif request.method == 'PUT':
+        data = QueryDict(request.body).dict()
+        form = UpdateCommentForm(data, instance=comment)
+        if form.is_valid():
+            print('valid')
+            form.save()
+            return render(request, 'recipes/partials/comment_detail.html', context)
+    elif request.method == 'DELETE':
+        Comment.objects.get(pk=pk).delete()
 
-#     def get_queryset(self):
-#         recipe = get_object_or_404(Recipe, recipe=self.kwargs.get('recipe'))
-#         return Comment.objects.filter(recipe=recipe).order_by('-date_posted')
+        context = {}
+        return render(request, 'recipes/partials/comment_detail.html', context)
 
-
-# def comment_detail(request, pk, recipe_id):
-#     comment = get_object_or_404(Comment, pk=pk)
-#     context = {'comment': comment}
-#     context['recipe_id'] = recipe_id
-#     print('t')
-#     if request.method == 'GET':
-#         return render(request, 'recipes/partials/_detail.html', context)
-#     elif request.method == 'PUT':
-#         data = QueryDict(self.request.body).dict()
-#         form = UpdateCommentForm(data, instance=comment)
-#         if form.is_valid():
-#             print('valid')
-#             # form.save()
-#             return render(self.request, 'recipes/partials/comment_detail.html', context)
 
 def comment_delete(request, pk, recipe_id):
     comment = get_object_or_404(Comment, pk=pk)
