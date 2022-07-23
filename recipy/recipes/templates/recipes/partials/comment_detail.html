@@ -9,8 +9,8 @@
   <p>Comment Successfully Deleted!</p>
 {% endif %}
 <!-- <span>{{object.title}}</span> -->
-{% if comment.author == user %}
-  <div>
+<div>
+  {% if comment.author == user %}
     <button class="small btn-secondary"
             hx-get="{% url 'comment-edit' pk=comment.id recipe_id=comment.recipe.id %}"
             hx-target="#comment_details_{{ comment.id }}">
