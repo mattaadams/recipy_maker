@@ -102,22 +102,20 @@ class RecipeDetailView(FormMixin, DetailView):
         form.save()
         return super(RecipeDetailView, self).form_valid(form)
 
-    def put(self, request, *args, **kwargs):
-        data = QueryDict(self.request.body).dict()
-        comment = Comment.objects.get(id=kwargs['pk'])
-        context = {'comment': comment}
-        form = CommentForm(data, instance=comment)
-        if form.is_valid():
-            form.save()
-            return render(self.request, 'recipes/partials/comment_detail.html', context)
-        context['form'] = form
-        return render(self.request, 'recipes/partials/edit_comment_form.html', context)
+    # def put(self, request, *args, **kwargs):
+    #     data = QueryDict(self.request.body).dict()
+    #     comment = Comment.objects.get(id=kwargs['pk'])
+    #     context = {'comment': comment}
+    #     form = CommentForm(data, instance=comment)
+    #     if form.is_valid():
+    #         form.save()
+    #         return render(self.request, 'recipes/partials/comment_detail.html', context)
+    #     context['form'] = form
+    #     return render(self.request, 'recipes/partials/edit_comment_form.html', context)
 
-    def delete(self, request, *args, **kwargs):
-        Comment.objects.get(id=kwargs['pk']).delete()
-
-        context = {}
-        return render(self.request, 'recipes/partials/comment_detail.html', context)
+    # def delete(self, request, *args, **kwargs):
+    #     Comment.objects.get(id=kwargs['pk']).delete()
+    #     return render(self.request, 'recipes/partials/comment_detail.html')
 
 
 def comment_detail(request, pk, recipe_id):
@@ -137,9 +135,7 @@ def comment_detail(request, pk, recipe_id):
             return render(request, 'recipes/partials/comment_detail.html', context)
     elif request.method == 'DELETE':
         Comment.objects.get(pk=pk).delete()
-
-        context = {}
-        return render(request, 'recipes/partials/comment_detail.html', context)
+        return render(request, 'recipes/partials/comment_detail.html')
 
 
 def comment_delete(request, pk, recipe_id):
