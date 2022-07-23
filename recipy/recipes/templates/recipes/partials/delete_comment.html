@@ -1,0 +1,7 @@
+{% load crispy_forms_tags %}
+<form hx-delete="{% url 'recipe-detail' comment.id %}"
+      hx-target="#comment_details_{{ comment.id }}">
+  {% csrf_token %}
+  <p>Are you sure you want to delete?</p>
+  <input class="small btn-danger" type="submit" />
+</form>

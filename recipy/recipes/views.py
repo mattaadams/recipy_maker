@@ -113,8 +113,14 @@ class RecipeDetailView(FormMixin, DetailView):
         context['form'] = form
         return render(self.request, 'recipes/partials/edit_comment_form.html', context)
 
+    def delete(self, request, *args, **kwargs):
+        Comment.objects.get(id=kwargs['pk']).delete()
 
-# class RecipeCommentDetailView(DetailView):
+        context = {}
+        return render(self.request, 'recipes/partials/comment_detail.html', context)
+
+
+# class RecipeCommentListView(ListView):
 #     model = Comment
 #     template_name = 'recipes/recipe_detail.html'
 #     context_object_name = 'recipes'
@@ -139,6 +145,15 @@ class RecipeDetailView(FormMixin, DetailView):
 #             print('valid')
 #             # form.save()
 #             return render(self.request, 'recipes/partials/comment_detail.html', context)
+
+def comment_delete(request, pk, recipe_id):
+    comment = get_object_or_404(Comment, pk=pk)
+    form = UpdateCommentForm(instance=comment)
+    context = {}
+    context['comment'] = comment
+    context['recipe_id'] = recipe_id
+    context['form'] = form
+    return render(request, "recipes/partials/delete_comment.html", context)
 
 
 def comment_edit_form(request, pk, recipe_id):
