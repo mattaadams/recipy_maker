@@ -2,14 +2,6 @@ from rest_framework import serializers
 from recipes.models import Recipe, Ingredient, Comment
 
 
-class IngredientListSerializer(serializers.ModelSerializer):
-    author = serializers.CharField(source="recipe.author", read_only=True)
-
-    class Meta:
-        model = Ingredient
-        fields = ['name', 'author']
-
-
 class RecipeIngredientListSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -17,26 +9,16 @@ class RecipeIngredientListSerializer(serializers.ModelSerializer):
         fields = ['name']
 
 
-class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False, write_only=False)
+class RecipeCommentListSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(read_only=True)
 
     class Meta:
-        model = Ingredient
-        fields = ['id', 'name']
 
-
-class IngredientDetailSerializer(serializers.ModelSerializer):
-    recipe_title = serializers.CharField(source="recipe.title", read_only=True)
-    author = serializers.CharField(source="recipe.author", read_only=True)
-
-    class Meta:
-        model = Ingredient
+        model = Comment
         fields = [
             'id',
-            'name',
-            'recipe',
-            'recipe_title',
-            'author'
+            'author',
+            'body',
         ]
 
 
@@ -126,19 +108,6 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
-class RecipeCommentListSerializer(serializers.ModelSerializer):
-    author = serializers.CharField(read_only=True)
-
-    class Meta:
-
-        model = Comment
-        fields = [
-            'id',
-            'author',
-            'body',
-        ]
-
-
 class RecipeDetailSerializer(serializers.ModelSerializer):
     ingredients = IngredientListSerializer(many=True, read_only=True)
     author = serializers.CharField(read_only=True)
@@ -159,6 +128,37 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
             'favorites',
             'favorite_count',
             'comments'
+        ]
+
+
+class IngredientListSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(source="recipe.author", read_only=True)
+
+    class Meta:
+        model = Ingredient
+        fields = ['name', 'author']
+
+
+class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False, write_only=False)
+
+    class Meta:
+        model = Ingredient
+        fields = ['id', 'name']
+
+
+class IngredientDetailSerializer(serializers.ModelSerializer):
+    recipe_title = serializers.CharField(source="recipe.title", read_only=True)
+    author = serializers.CharField(source="recipe.author", read_only=True)
+
+    class Meta:
+        model = Ingredient
+        fields = [
+            'id',
+            'name',
+            'recipe',
+            'recipe_title',
+            'author'
         ]
 
 
