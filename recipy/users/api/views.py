@@ -65,8 +65,7 @@ class UserFavoriteListAPIView(ListAPIView):
         return self.list(request, *args, **kwargs)
 
     def get_queryset(self):
-        favorite = self.kwargs['pk']
-        return Recipe.objects.filter(favorites=favorite)
+        return Recipe.objects.filter(favorites=self.kwargs.get('pk'))
 
 
 class UserRecipeListAPIView(ListAPIView):
@@ -75,9 +74,9 @@ class UserRecipeListAPIView(ListAPIView):
     @ swagger_auto_schema(tags=['Users'])
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+    #getattr(self, 'swagger_fake_view', False)
 
     def get_queryset(self):
-        author = self.kwargs['pk']
-        return Recipe.objects.filter(author=author)
+        return Recipe.objects.filter(author=self.kwargs.get('pk'))
 
 # User Recommended Recipe List View
