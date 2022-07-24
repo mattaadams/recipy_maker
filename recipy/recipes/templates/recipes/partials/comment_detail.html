@@ -9,7 +9,7 @@
   <p>Comment Successfully Deleted!</p>
 {% endif %}
 <div>
-  {% if comment.author == user %}
+  {% if comment.author.id == user.id %}
     <button class="small btn-secondary"
             hx-get="{% url 'comment-edit' pk=comment.id recipe_id=comment.recipe.id %}"
             hx-target="#comment_details_{{ comment.id }}">

@@ -118,6 +118,7 @@ class RecipeDetailView(FormMixin, DetailView):
     #     return render(self.request, 'recipes/partials/comment_detail.html')
 
 
+@login_required
 def comment_detail(request, pk, recipe_id):
     comment = get_object_or_404(Comment, pk=pk)
     form = UpdateCommentForm(instance=comment)
@@ -125,19 +126,21 @@ def comment_detail(request, pk, recipe_id):
     context['comment'] = comment
     context['recipe_id'] = recipe_id
     if request.method == 'GET':
-        return render(request, 'recipes/partials/_detail.html', context)
+        return render(request, 'recipes/partials/comment_detail.html', context)
     elif request.method == 'PUT':
         data = QueryDict(request.body).dict()
         form = UpdateCommentForm(data, instance=comment)
         if form.is_valid():
-            print('valid')
-            form.save()
-            return render(request, 'recipes/partials/comment_detail.html', context)
+            if request.user.id == comment.author.id:
+                form.save()
+                return render(request, 'recipes/partials/comment_detail.html', context)
     elif request.method == 'DELETE':
-        Comment.objects.get(pk=pk).delete()
+        if request.user.id == comment.author.id:
+            Comment.objects.get(pk=pk).delete()
         return render(request, 'recipes/partials/comment_detail.html')
 
 
+@login_required
 def comment_delete(request, pk, recipe_id):
     comment = get_object_or_404(Comment, pk=pk)
     form = UpdateCommentForm(instance=comment)
@@ -148,6 +151,7 @@ def comment_delete(request, pk, recipe_id):
     return render(request, "recipes/partials/delete_comment.html", context)
 
 
+@login_required
 def comment_edit_form(request, pk, recipe_id):
     comment = get_object_or_404(Comment, pk=pk)
     form = UpdateCommentForm(instance=comment)
@@ -238,7 +242,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         recipe = self.get_object()
-        if self.request.user == recipe.author:
+        if self.request.user.id == recipe.author.id:
             return True
         return False
 
@@ -249,6 +253,6 @@ class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         recipe = self.get_object()
-        if self.request.user == recipe.author:
+        if self.request.user.id == recipe.author.id:
             return True
         return False

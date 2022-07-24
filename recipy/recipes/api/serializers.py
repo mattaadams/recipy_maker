@@ -2,6 +2,37 @@ from rest_framework import serializers
 from recipes.models import Recipe, Ingredient, Comment
 
 
+class IngredientListSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(source="recipe.author", read_only=True)
+
+    class Meta:
+        model = Ingredient
+        fields = ['name', 'author']
+
+
+class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False, write_only=False)
+
+    class Meta:
+        model = Ingredient
+        fields = ['id', 'name']
+
+
+class IngredientDetailSerializer(serializers.ModelSerializer):
+    recipe_title = serializers.CharField(source="recipe.title", read_only=True)
+    author = serializers.CharField(source="recipe.author", read_only=True)
+
+    class Meta:
+        model = Ingredient
+        fields = [
+            'id',
+            'name',
+            'recipe',
+            'recipe_title',
+            'author'
+        ]
+
+
 class RecipeIngredientListSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -128,37 +159,6 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
             'favorites',
             'favorite_count',
             'comments'
-        ]
-
-
-class IngredientListSerializer(serializers.ModelSerializer):
-    author = serializers.CharField(source="recipe.author", read_only=True)
-
-    class Meta:
-        model = Ingredient
-        fields = ['name', 'author']
-
-
-class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False, write_only=False)
-
-    class Meta:
-        model = Ingredient
-        fields = ['id', 'name']
-
-
-class IngredientDetailSerializer(serializers.ModelSerializer):
-    recipe_title = serializers.CharField(source="recipe.title", read_only=True)
-    author = serializers.CharField(source="recipe.author", read_only=True)
-
-    class Meta:
-        model = Ingredient
-        fields = [
-            'id',
-            'name',
-            'recipe',
-            'recipe_title',
-            'author'
         ]
 
 

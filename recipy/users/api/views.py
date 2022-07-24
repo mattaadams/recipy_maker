@@ -17,10 +17,14 @@ from rest_framework.permissions import (
 
 )
 from django.contrib.auth.models import User
+from recipes.models import Recipe
+
 from .serializers import (
     UserCreateSerializer,
     UserListSerializer,
-    UserDetailSerializer
+    UserDetailSerializer,
+    UserFavoriteRecipeListSerializer
+
 )
 
 
@@ -49,3 +53,18 @@ class UserDetailAPIView(RetrieveAPIView):
     @swagger_auto_schema(tags=['Users'])
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+
+# UNFINISHED
+
+class UserFavoriteListAPIView(ListAPIView):
+    queryset = Recipe.objects.all()
+    serializer_class = UserFavoriteRecipeListSerializer
+
+    @swagger_auto_schema(tags=['Users'])
+    def get(self, request, *args, **kwargs):
+        print(kwargs)
+        return self.list(request, *args, **kwargs)
+
+# User Created Recipe List View
+# User Recommended Recipe List View
