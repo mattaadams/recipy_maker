@@ -1,6 +1,6 @@
 
 from drf_yasg.utils import swagger_auto_schema
-
+from django.db.models import Q
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
@@ -37,12 +37,24 @@ from .serializers import (
 
 class RecipeListAPIView(ListAPIView):
 
-    queryset = Recipe.objects.all()
+    #queryset = Recipe.objects.all()
     serializer_class = RecipeListSerializer
 
     @swagger_auto_schema(tags=['Recipes'])
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset_list = Recipe.objects.all()
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(instructions__icontains=query) |
+                Q(author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
 
 class RecipeCreateAPIView(CreateAPIView):
@@ -104,12 +116,21 @@ class RecipeDeleteAPIView(RetrieveDestroyAPIView):
 
 
 class IngredientListAPIView(ListAPIView):
-    queryset = Ingredient.objects.all()
     serializer_class = IngredientListSerializer
 
     @swagger_auto_schema(tags=['Ingredients'])
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset_list = Ingredient.objects.all()
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(name__icontains=query) |
+                Q(recipe__author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
 
 # class IngredientCreateAPIView(CreateAPIView):
@@ -186,6 +207,17 @@ class CommentListAPIView(ListAPIView):
     @swagger_auto_schema(tags=['Comments'])
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset_list = Comment.objects.all()
+        query = self.request.GET.get("q")
+        if query:
+            queryset_list = queryset_list.filter(
+                Q(body__icontains=query) |
+                Q(recipe__title__icontains=query) |
+                Q(author__username__icontains=query)
+            ).distinct()
+        return queryset_list
 
 
 class CommentCreateAPIView(CreateAPIView):

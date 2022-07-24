@@ -3,6 +3,14 @@ from recipes.models import Recipe, Ingredient, Comment
 
 
 class IngredientListSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(source="recipe.author", read_only=True)
+
+    class Meta:
+        model = Ingredient
+        fields = ['name', 'author']
+
+
+class RecipeIngredientListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
@@ -33,7 +41,7 @@ class IngredientDetailSerializer(serializers.ModelSerializer):
 
 
 class RecipeListSerializer(serializers.ModelSerializer):
-    ingredients = IngredientListSerializer(many=True, read_only=True)
+    ingredients = RecipeIngredientListSerializer(many=True, read_only=True)
     author = serializers.CharField(read_only=True)
 
     class Meta:
@@ -46,7 +54,6 @@ class RecipeListSerializer(serializers.ModelSerializer):
             'description',
             'ingredients',
             'instructions',
-            'date_posted'
         ]
 
 
@@ -119,10 +126,24 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
+class RecipeCommentListSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(read_only=True)
+
+    class Meta:
+
+        model = Comment
+        fields = [
+            'id',
+            'author',
+            'body',
+        ]
+
+
 class RecipeDetailSerializer(serializers.ModelSerializer):
     ingredients = IngredientListSerializer(many=True, read_only=True)
     author = serializers.CharField(read_only=True)
     favorite_count = serializers.IntegerField(source='favorites.count', read_only=True)
+    comments = RecipeCommentListSerializer(many=True, read_only=True)
 
     class Meta:
 
@@ -136,12 +157,14 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
             'instructions',
             'date_posted',
             'favorites',
-            'favorite_count'
+            'favorite_count',
+            'comments'
         ]
 
 
 class CommentListSerializer(serializers.ModelSerializer):
     author = serializers.CharField(read_only=True)
+    recipe_title = serializers.CharField(source="recipe.title", read_only=True)
 
     class Meta:
 
@@ -150,8 +173,8 @@ class CommentListSerializer(serializers.ModelSerializer):
             'id',
             'author',
             'body',
-            'date_posted',
-            'recipe'
+            'recipe',
+            'recipe_title'
         ]
 
 
