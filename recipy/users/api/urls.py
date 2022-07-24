@@ -3,7 +3,9 @@ from .views import (
     UserCreateAPIView,
     UserListAPIView,
     UserDetailAPIView,
-    UserFavoriteListAPIView
+    UserFavoriteListAPIView,
+    UserRecipeListAPIView
+
 
 )
 
@@ -12,6 +14,6 @@ urlpatterns = [
     path('', UserListAPIView.as_view(), name='user-api-list'),
     path('<int:pk>', UserDetailAPIView.as_view(), name='user-api-detail'),
     path('<int:pk>/favorites', UserFavoriteListAPIView.as_view(), name='user-api-favorites'),
-
+    path('<int:pk>/created_recipes', UserRecipeListAPIView.as_view(), name='user-api-recipes'),
 
 ]

@@ -1,4 +1,5 @@
 from drf_yasg.utils import swagger_auto_schema
+from django.db.models import Q
 
 from rest_framework.generics import (
     CreateAPIView,
@@ -23,9 +24,9 @@ from .serializers import (
     UserCreateSerializer,
     UserListSerializer,
     UserDetailSerializer,
-    UserFavoriteRecipeListSerializer
 
 )
+from recipes.api.serializers import RecipeListSerializer
 
 
 class UserCreateAPIView(CreateAPIView):
@@ -55,16 +56,28 @@ class UserDetailAPIView(RetrieveAPIView):
         return self.retrieve(request, *args, **kwargs)
 
 
-# UNFINISHED
-
 class UserFavoriteListAPIView(ListAPIView):
-    queryset = Recipe.objects.all()
-    serializer_class = UserFavoriteRecipeListSerializer
+    serializer_class = RecipeListSerializer
 
     @swagger_auto_schema(tags=['Users'])
     def get(self, request, *args, **kwargs):
         print(kwargs)
         return self.list(request, *args, **kwargs)
 
-# User Created Recipe List View
+    def get_queryset(self):
+        favorite = self.kwargs['pk']
+        return Recipe.objects.filter(favorites=favorite)
+
+
+class UserRecipeListAPIView(ListAPIView):
+    serializer_class = RecipeListSerializer
+
+    @ swagger_auto_schema(tags=['Users'])
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        author = self.kwargs['pk']
+        return Recipe.objects.filter(author=author)
+
 # User Recommended Recipe List View
