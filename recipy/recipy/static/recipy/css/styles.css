@@ -757,10 +757,10 @@ nav#navbar-main li {
 }
 
 .dropdown-menu > li > a:focus,
-.dropdown-menu > li > a:hover {
-  color: rgba(255, 255, 255, 1);
+.dropdown-menu a:hover {
+  color: rgb(255, 255, 255);
   text-decoration: none;
-  background-color: #cc790c;
+  background-color: #0ccccc !important;
 }
 
 .dropdown-menu > .active > a,
@@ -894,4 +894,11 @@ nav#navbar-main li {
 
 .media-body {
   word-break: keep-all;
+}
+
+.btn-circle {
+  padding: 13px 18px;
+  border-radius: 30px;
+  font-size: 15px;
+  text-align: center;
 }

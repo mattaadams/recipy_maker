@@ -39,7 +39,7 @@ class IngredientForm(forms.ModelForm):
         fields = ['name',  'recipe']
         widgets = {
             # 'quantity': forms.TextInput(attrs={'placeholder': 'e.g. 2 cups'}),
-            'name': forms.TextInput(attrs={'placeholder': 'e.g. 2 cups Milk'}),
+            'name': forms.TextInput(attrs={'placeholder': 'e.g. 2 cups Milk', 'cols': 5}),
 
         }
 
