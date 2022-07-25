@@ -43,6 +43,10 @@ class IngredientForm(forms.ModelForm):
 
         }
 
+    # def __init__(self, *args, **kwargs):
+    #     super(IngredientForm, self).__init__(*args, **kwargs)
+    #     self.fields['name'].required = False
+
 
 class RecipeForm(forms.ModelForm):
     class Meta:
