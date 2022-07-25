@@ -140,7 +140,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class RecipeDetailSerializer(serializers.ModelSerializer):
-    ingredients = IngredientListSerializer(many=True, read_only=True)
+    ingredients = RecipeIngredientListSerializer(many=True, read_only=True)
     author = serializers.CharField(read_only=True)
     favorite_count = serializers.IntegerField(source='favorites.count', read_only=True)
     comments = RecipeCommentListSerializer(many=True, read_only=True)

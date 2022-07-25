@@ -17,13 +17,13 @@
                     {{ ingredient_form.management_form }}
                     {% for form in ingredient_form %}
                         <div class='ingredient-form'>
-                            {{ form|crispy }}
+                            {{ form }}
                             {% comment %} <button class="btn btn-danger btn-sm btn-circle" type="button">X</button> {% endcomment %}
                         </div>
                     {% endfor %}
                 </div>
                 <div id="empty-form" class="hidden">
-                    {{ ingredient_form.empty_form|crispy }}
+                    {{ ingredient_form.empty_form }}
                     {% comment %} <button class="btn btn-danger btn-sm btn-circle" type="button">X</button> {% endcomment %}
                 </div>
                 <button id="add-more" class="btn btn-primary btn-sm" type="button">+ Ingredient</button>

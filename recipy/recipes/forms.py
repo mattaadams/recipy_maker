@@ -39,7 +39,7 @@ class IngredientForm(forms.ModelForm):
         fields = ['name',  'recipe']
         widgets = {
             # 'quantity': forms.TextInput(attrs={'placeholder': 'e.g. 2 cups'}),
-            'name': forms.TextInput(attrs={'placeholder': 'e.g. 2 cups Milk', 'cols': 5}),
+            'name': forms.TextInput(attrs={'placeholder': 'e.g. 2 cups Milk', 'style': 'width:40%'}),
 
         }
 
@@ -61,11 +61,11 @@ class RecipeForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Recipe Name'}),
             'description': forms.Textarea(
-                attrs={'placeholder': 'Enter description here'}),
+                attrs={'placeholder': 'Enter description here', 'rows': 5, }),
             'image_url': forms.URLInput(
                 attrs={'placeholder': 'https://'}),
             'instructions': forms.Textarea(
-                attrs={'placeholder': 'Enter instructions here'}),
+                attrs={'placeholder': 'Enter instructions here', 'rows': 5, }),
         }
 
     def __init__(self, *args, **kwargs):
@@ -79,6 +79,6 @@ RecipeInlineFormSet = inlineformset_factory(
     Ingredient,
     form=IngredientForm,
     extra=1,
-    can_delete=False,
+    can_delete=True,
     can_order=False
 )
