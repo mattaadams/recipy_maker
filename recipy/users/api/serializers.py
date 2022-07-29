@@ -7,9 +7,24 @@ class UserCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'username',
-            'password',
             'email',
+            'password',
         ]
+        extra_kwargs = {"password":
+                        {"write_only": True}
+                        }
+
+    def create(self, validated_data):
+        username = validated_data['username']
+        email = validated_data['email']
+        password = validated_data['password']
+        user_obj = User(
+            username=username,
+            email=email,
+        )
+        user_obj.set_password(password)
+        user_obj.save()
+        return validated_data
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -30,5 +45,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'username',
-            'favorites'
+            'favorites',
+            'date_joined',
+            'is_active'
         ]

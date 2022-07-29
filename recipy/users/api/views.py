@@ -1,5 +1,4 @@
 from drf_yasg.utils import swagger_auto_schema
-from django.db.models import Q
 
 from rest_framework.generics import (
     CreateAPIView,
@@ -61,7 +60,6 @@ class UserFavoriteListAPIView(ListAPIView):
 
     @swagger_auto_schema(tags=['Users'])
     def get(self, request, *args, **kwargs):
-        print(kwargs)
         return self.list(request, *args, **kwargs)
 
     def get_queryset(self):

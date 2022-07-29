@@ -1,6 +1,11 @@
 
 from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Q
+
+from rest_framework.filters import (
+    SearchFilter,
+    OrderingFilter
+)
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
@@ -10,6 +15,8 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView,
     RetrieveDestroyAPIView
 )
+
+from .pagination import RecipePageNumberPagination
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
@@ -36,25 +43,27 @@ from .serializers import (
 
 
 class RecipeListAPIView(ListAPIView):
-
-    #queryset = Recipe.objects.all()
+    queryset = Recipe.objects.all()
     serializer_class = RecipeListSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', 'author__username', 'description', 'instructions']
+    pagination_class = RecipePageNumberPagination
 
     @swagger_auto_schema(tags=['Recipes'])
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-    def get_queryset(self):
-        queryset_list = Recipe.objects.all()
-        query = self.request.GET.get("q")
-        if query:
-            queryset_list = queryset_list.filter(
-                Q(title__icontains=query) |
-                Q(description__icontains=query) |
-                Q(instructions__icontains=query) |
-                Q(author__username__icontains=query)
-            ).distinct()
-        return queryset_list
+    # def get_queryset(self):
+    #     queryset_list = Recipe.objects.all()
+    #     query = self.request.GET.get("q")
+    #     if query:
+    #         queryset_list = queryset_list.filter(
+    #             Q(title__icontains=query) |
+    #             Q(description__icontains=query) |
+    #             Q(instructions__icontains=query) |
+    #             Q(author__username__icontains=query)
+    #         ).distinct()
+    #     return queryset_list
 
 
 class RecipeCreateAPIView(CreateAPIView):
@@ -116,21 +125,15 @@ class RecipeDeleteAPIView(RetrieveDestroyAPIView):
 
 
 class IngredientListAPIView(ListAPIView):
+    queryset = Ingredient.objects.all()
     serializer_class = IngredientListSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['recipe__author__username', 'name']
+    pagination_class = RecipePageNumberPagination
 
     @swagger_auto_schema(tags=['Ingredients'])
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
-
-    def get_queryset(self):
-        queryset_list = Ingredient.objects.all()
-        query = self.request.GET.get("q")
-        if query:
-            queryset_list = queryset_list.filter(
-                Q(name__icontains=query) |
-                Q(recipe__author__username__icontains=query)
-            ).distinct()
-        return queryset_list
 
 
 # class IngredientCreateAPIView(CreateAPIView):
@@ -152,7 +155,6 @@ class IngredientDetailAPIView(RetrieveAPIView):
 
     def get_object(self):
         obj = super().get_object()
-        print(obj.__dict__)
         return obj
 
     @swagger_auto_schema(tags=['Ingredients'])
@@ -203,21 +205,13 @@ class IngredientDetailAPIView(RetrieveAPIView):
 class CommentListAPIView(ListAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentListSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['author__username', 'body', 'recipe__title']
+    pagination_class = RecipePageNumberPagination
 
     @swagger_auto_schema(tags=['Comments'])
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
-
-    def get_queryset(self):
-        queryset_list = Comment.objects.all()
-        query = self.request.GET.get("q")
-        if query:
-            queryset_list = queryset_list.filter(
-                Q(body__icontains=query) |
-                Q(recipe__title__icontains=query) |
-                Q(author__username__icontains=query)
-            ).distinct()
-        return queryset_list
 
 
 class CommentCreateAPIView(CreateAPIView):
