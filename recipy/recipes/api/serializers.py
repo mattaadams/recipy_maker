@@ -7,7 +7,11 @@ class IngredientListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ['name', 'author']
+        fields = ['name',
+                  'recipe',
+                  'author',
+                  'id',
+                  ]
 
 
 class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
@@ -15,7 +19,7 @@ class IngredientCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ['id', 'name']
+        fields = ['name', 'id']
 
 
 class IngredientDetailSerializer(serializers.ModelSerializer):
@@ -98,11 +102,14 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
 
         ingredients_data = validated_data.pop("ingredients")   # updated data
-        # print(ingredients_data)
         remove_items = {item.id: item for item in instance.ingredients.all()}  # old data
-        # print(remove_items)
 
-        # maybe try to form something using both validated data and remove items
+        # This loop is needed if you have ID set to read_only, probably better way to implement this.
+        # for idx, item in enumerate(remove_items):
+        #     try:
+        #         ingredients_data[idx]["id"] = item
+        #     except:
+        #         continue
 
         for ingredient_data in ingredients_data:
             item_id = ingredient_data.get("id", None)
@@ -116,10 +123,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
                 instance_item = remove_items.pop(item_id)
 
                 Ingredient.objects.filter(id=instance_item.id).update(**ingredient_data)
-            else:
-                # we replace the user provided id with old one.. as we don't want it to be modified...
-                # I'm not sure how else to handle as in order to get ingredients id in validated data it has to be writable
-                # At least this prevents it from being changed even if user can provide an input
+            else:  # this  condition is only used if the id is writable
                 if len(list(remove_items)) > 0:
                     old_id = list(remove_items.keys())[0]
                     ingredient_data['id'] = old_id

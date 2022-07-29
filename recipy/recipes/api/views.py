@@ -1,4 +1,3 @@
-
 from drf_yasg.utils import swagger_auto_schema
 from django.db.models import Q
 
@@ -16,13 +15,15 @@ from rest_framework.generics import (
     RetrieveDestroyAPIView
 )
 
-from .pagination import RecipePageNumberPagination
+from .pagination import (
+    RecipePageNumberPagination,
+    IngredientPageNumberPagination
+)
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
-
 )
 from .permissions import (
     IsOwnerOrReadOnly,
@@ -34,7 +35,6 @@ from .serializers import (
     RecipeCreateUpdateSerializer,
     RecipeDetailSerializer,
     IngredientListSerializer,
-    IngredientCreateUpdateSerializer,
     IngredientDetailSerializer,
     CommentListSerializer,
     CommentCreateUpdateSerializer,
@@ -129,24 +129,11 @@ class IngredientListAPIView(ListAPIView):
     serializer_class = IngredientListSerializer
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['recipe__author__username', 'name']
-    pagination_class = RecipePageNumberPagination
+    pagination_class = IngredientPageNumberPagination
 
     @swagger_auto_schema(tags=['Ingredients'])
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
-
-
-# class IngredientCreateAPIView(CreateAPIView):
-#     queryset = Ingredient.objects.all()
-#     serializer_class = IngredientCreateUpdateSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     @swagger_auto_schema(tags=['Ingredients'])
-#     def post(self, request, *args, **kwargs):
-#         return self.create(request, *args, **kwargs)
-
-#     def perform_create(self, serializer):
-#         serializer.save(author=self.request.user)
 
 
 class IngredientDetailAPIView(RetrieveAPIView):
@@ -160,46 +147,6 @@ class IngredientDetailAPIView(RetrieveAPIView):
     @swagger_auto_schema(tags=['Ingredients'])
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-
-
-# class IngredientUpdateAPIView(RetrieveUpdateAPIView):
-#     queryset = Ingredient.objects.all()
-#     serializer_class = IngredientCreateUpdateSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly, IsParentOwnerOrReadOnly]
-
-#     def perform_update(self, serializer):
-#         serializer.save(author=self.request.user)
-
-#     @swagger_auto_schema(tags=['Ingredients'], auto_schema=None)
-#     def get(self, request, *args, **kwargs):
-#         return self.retrieve(request, *args, **kwargs)
-
-#     @swagger_auto_schema(tags=['Ingredients'])
-#     def patch(self, request, *args, **kwargs):
-#         return self.partial_update(request, *args, **kwargs)
-
-#     @swagger_auto_schema(tags=['Ingredients'])
-#     def put(self, request, *args, **kwargs):
-#         return self.update(request, *args, **kwargs)
-
-
-# class IngredientDeleteAPIView(RetrieveDestroyAPIView):
-#     queryset = Ingredient.objects.all()
-#     serializer_class = IngredientDetailSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly, IsParentOwnerOrReadOnly]
-
-#     @swagger_auto_schema(tags=['Ingredients'])
-#     def delete(self, request, *args, **kwargs):
-#         return self.destroy(request, *args, **kwargs)
-
-#     @swagger_auto_schema(tags=['Ingredients'], auto_schema=None)
-#     def get(self, request, *args, **kwargs):
-#         return self.retrieve(request, *args, **kwargs)
-
-#     def get_object(self):
-#         obj = super().get_object()
-#         print(obj)
-#         return obj
 
 
 class CommentListAPIView(ListAPIView):
