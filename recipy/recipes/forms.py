@@ -56,7 +56,7 @@ class RecipeForm(forms.ModelForm):
 
         labels = {
             "image": "Upload an Image (Optional)",
-            "image_url": "Or paste image URL:"
+            "image_url": "Or paste image URL: (Optional)"
         }
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Recipe Name'}),

@@ -1,4 +1,8 @@
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.views import APIView
+
 
 from rest_framework.generics import (
     CreateAPIView,
@@ -21,6 +25,7 @@ from recipes.models import Recipe
 
 from .serializers import (
     UserCreateSerializer,
+    UserLoginSerializer,
     UserListSerializer,
     UserDetailSerializer,
 
@@ -46,6 +51,19 @@ class UserListAPIView(ListAPIView):
         return self.list(request, *args, **kwargs)
 
 
+class UserLoginAPIView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = UserLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = self.request.data
+        serializer = UserLoginSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            new_data = serializer.data
+            return Response(new_data, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
 class UserDetailAPIView(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
@@ -69,7 +87,7 @@ class UserFavoriteListAPIView(ListAPIView):
 class UserRecipeListAPIView(ListAPIView):
     serializer_class = RecipeListSerializer
 
-    @ swagger_auto_schema(tags=['Users'])
+    @swagger_auto_schema(tags=['Users'])
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
     #getattr(self, 'swagger_fake_view', False)

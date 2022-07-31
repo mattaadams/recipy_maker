@@ -99,7 +99,9 @@ class RecipeDetailView(FormMixin, DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        form.save()
+        instance = form.save()
+        instance.author = self.request.user
+        instance.save()
         return super(RecipeDetailView, self).form_valid(form)
 
     # def put(self, request, *args, **kwargs):
