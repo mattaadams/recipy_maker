@@ -21,13 +21,14 @@ from rest_framework.permissions import (
 
 )
 from django.contrib.auth.models import User
-from recipes.models import Recipe
+from recipes.models import Recipe, Comment
 
 from .serializers import (
     UserCreateSerializer,
     UserLoginSerializer,
     UserListSerializer,
     UserDetailSerializer,
+    UserCommentListSerializer
 
 )
 from recipes.api.serializers import RecipeListSerializer
@@ -55,6 +56,7 @@ class UserLoginAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
 
+    @swagger_auto_schema(tags=['Users'])
     def post(self, request, *args, **kwargs):
         data = self.request.data
         serializer = UserLoginSerializer(data=data)
@@ -95,4 +97,15 @@ class UserRecipeListAPIView(ListAPIView):
     def get_queryset(self):
         return Recipe.objects.filter(author=self.kwargs.get('pk'))
 
+
+class UserCommentListAPIView(ListAPIView):
+    serializer_class = UserCommentListSerializer
+
+    @swagger_auto_schema(tags=['Users'])
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    #getattr(self, 'swagger_fake_view', False)
+
+    def get_queryset(self):
+        return Comment.objects.filter(author=self.kwargs.get('pk'))
 # User Recommended Recipe List View

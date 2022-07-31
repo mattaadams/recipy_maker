@@ -117,7 +117,6 @@ class UserCommentListSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    comments = UserCommentListSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -127,5 +126,4 @@ class UserDetailSerializer(serializers.ModelSerializer):
             'favorites',
             'date_joined',
             'is_active',
-            'comments'
         ]
