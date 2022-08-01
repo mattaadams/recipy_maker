@@ -19,7 +19,10 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -38,10 +41,12 @@ urlpatterns = [
     path(
         'api/',
         include(
-            [path('swagger/schema', schema_view.with_ui('swagger', cache_timeout=0),
-                  name="swagger-schema"),
-             path('recipes/', include('recipes.api.urls'), name='recipes-api'),
-             path('users/', include('users.api.urls'), name='users-api'), ]))]
+            [path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+                path('auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+                path('swagger/schema', schema_view.with_ui('swagger', cache_timeout=0),
+                     name="swagger-schema"),
+                path('recipes/', include('recipes.api.urls'), name='recipes-api'),
+                path('users/', include('users.api.urls'), name='users-api'), ]))]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

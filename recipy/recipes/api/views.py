@@ -28,7 +28,7 @@ from rest_framework.permissions import (
 from .permissions import (
     IsOwnerOrReadOnly,
     IsParentOwnerOrReadOnly,
-    IsCommentOwnerOrReadOnly)
+)
 from recipes.models import Recipe, Ingredient, Comment
 from .serializers import (
     RecipeListSerializer,
@@ -92,7 +92,7 @@ class RecipeDetailAPIView(RetrieveAPIView):
 class RecipeUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeCreateUpdateSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)
@@ -113,7 +113,7 @@ class RecipeUpdateAPIView(RetrieveUpdateAPIView):
 class RecipeDeleteAPIView(RetrieveDestroyAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeDetailSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     @swagger_auto_schema(tags=['Recipes'])
     def delete(self, request, *args, **kwargs):
@@ -184,7 +184,7 @@ class CommentDetailAPIView(RetrieveAPIView):
 class CommentUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentCreateUpdateSerializer
-    permission_classes = [IsAuthenticated, IsCommentOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     @swagger_auto_schema(tags=['Comments'], auto_schema=None)
     def get(self, request, *args, **kwargs):
@@ -202,7 +202,7 @@ class CommentUpdateAPIView(RetrieveUpdateAPIView):
 class CommentDeleteAPIView(DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentDetailSerializer
-    permission_classes = [IsAuthenticated, IsCommentOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     @swagger_auto_schema(tags=['Comments'])
     def delete(self, request, *args, **kwargs):
