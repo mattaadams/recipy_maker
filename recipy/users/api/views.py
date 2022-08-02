@@ -2,7 +2,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from rest_framework.generics import (
     CreateAPIView,
@@ -52,7 +52,7 @@ class UserListAPIView(ListAPIView):
         return self.list(request, *args, **kwargs)
 
 
-class UserLoginAPIView(APIView):
+class UserLoginAPIView(TokenObtainPairView):
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
 

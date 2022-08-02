@@ -86,7 +86,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
             if not user_obj.check_password(password):
                 raise ValidationError("Incorrect credentials, please try again.")
 
-        data["token"] = "Some Random Token"
+        data["token"] = "Some Random Token; (Use api/auth/token)"  # TODO
 
         return data
 
