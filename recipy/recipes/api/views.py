@@ -5,6 +5,11 @@ from rest_framework.filters import (
     SearchFilter,
     OrderingFilter
 )
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
@@ -34,6 +39,7 @@ from .serializers import (
     RecipeListSerializer,
     RecipeCreateUpdateSerializer,
     RecipeDetailSerializer,
+    RecipeFavoriteSerializer,
     IngredientListSerializer,
     IngredientDetailSerializer,
     CommentListSerializer,
@@ -124,6 +130,26 @@ class RecipeDeleteAPIView(RetrieveDestroyAPIView):
         return self.retrieve(request, *args, **kwargs)
 
 
+class RecipeFavoriteAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(tags=['Recipes'])
+    def post(self, request, *args, **kwargs):
+        data = self.request.data
+        recipe = Recipe.objects.get(pk=self.kwargs.get('pk'))
+        serializer = RecipeFavoriteSerializer(data=data)  # No data is actually being passed...
+        if recipe.favorites.filter(id=self.request.user.id).exists():
+            recipe.favorites.remove(self.request.user)
+            message = f"Recipe {recipe.id} REMOVED to favorites"
+        else:
+            recipe.favorites.add(self.request.user)
+            message = f"Recipe {recipe.id} ADDED to favorites"
+
+        if serializer.is_valid(raise_exception=True):
+            return Response(message, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
 class IngredientListAPIView(ListAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientListSerializer
@@ -147,6 +173,17 @@ class IngredientDetailAPIView(RetrieveAPIView):
     @swagger_auto_schema(tags=['Ingredients'])
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+
+class RecipeCommentListAPIView(ListAPIView):
+    serializer_class = CommentListSerializer
+
+    @swagger_auto_schema(tags=['Recipes'])
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return Comment.objects.filter(recipe=self.kwargs.get('pk'))
 
 
 class CommentListAPIView(ListAPIView):

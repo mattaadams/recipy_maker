@@ -6,6 +6,7 @@ from .views import (
     RecipeDetailAPIView,
     RecipeUpdateAPIView,
     RecipeDeleteAPIView,
+    RecipeCommentListAPIView,
     IngredientListAPIView,
     # IngredientCreateAPIView,
     IngredientDetailAPIView,
@@ -16,6 +17,7 @@ from .views import (
     CommentDetailAPIView,
     CommentUpdateAPIView,
     CommentDeleteAPIView,
+    RecipeFavoriteAPIView
 )
 
 
@@ -26,6 +28,9 @@ urlpatterns = [
     path('<int:pk>/update', RecipeUpdateAPIView.as_view(), name='recipe-api-update'),
     path('<int:pk>/delete', RecipeDeleteAPIView.as_view(), name='recipe-api-delete'),
     path('ingredients/',  IngredientListAPIView.as_view(), name='ingredients-api-list'),
+    path('<int:pk>/comments',  RecipeCommentListAPIView.as_view(), name='ingredients-api-comment-list'),
+    path('<int:pk>/favorite',  RecipeFavoriteAPIView.as_view(), name='ingredients-api-favorite'),
+
     # path('ingredients/create', IngredientCreateAPIView.as_view(), name='ingredients-api-create'),
     path('ingredients/<int:pk>',  IngredientDetailAPIView.as_view(), name='ingredients-api-detail'),
     # path('ingredients/<int:pk>/update',  IngredientUpdateAPIView.as_view(), name='ingredients-api-update'),

@@ -166,6 +166,19 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
         ]
 
 
+class RecipeFavoriteSerializer(serializers.ModelSerializer):
+    favorites = serializers.CharField(read_only=True)
+    favorite_count = serializers.IntegerField(source='favorites.count', read_only=True)
+
+    class Meta:
+
+        model = Recipe
+        fields = [
+            'favorites',
+            'favorite_count'
+        ]
+
+
 class CommentListSerializer(serializers.ModelSerializer):
     author = serializers.CharField(read_only=True)
     recipe_title = serializers.CharField(source="recipe.title", read_only=True)

@@ -4,6 +4,7 @@ from recipes.models import Comment
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from recipes.api.serializers import RecipeListSerializer
+# from rest_framework_simplejwt.settings import api_settings
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -86,7 +87,12 @@ class UserLoginSerializer(serializers.ModelSerializer):
             if not user_obj.check_password(password):
                 raise ValidationError("Incorrect credentials, please try again.")
 
-        data["token"] = "Some Random Token; (Use api/auth/token)"  # TODO
+        # jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        # jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+        # payload = jwt_payload_handler(user)
+        # data["token"] = jwt_encode_handler(payload)
+        data["token"] = "use api/auth/token"  # TODO
 
         return data
 

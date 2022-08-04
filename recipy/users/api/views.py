@@ -52,7 +52,7 @@ class UserListAPIView(ListAPIView):
         return self.list(request, *args, **kwargs)
 
 
-class UserLoginAPIView(TokenObtainPairView):
+class UserLoginAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
 
