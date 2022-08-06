@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from .pagination import UserPageNumberPagination
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
@@ -46,6 +46,7 @@ class UserCreateAPIView(CreateAPIView):
 class UserListAPIView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserListSerializer
+    pagination_class = UserPageNumberPagination
 
     @swagger_auto_schema(operation_description="Return a list of users", tags=['Users'])
     def get(self, request, *args, **kwargs):

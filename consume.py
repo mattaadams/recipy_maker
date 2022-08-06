@@ -1,15 +1,38 @@
 import requests
 
-my_user = {'username': 'admin', 'password': '1477'}
 
-#recipe_list = requests.get('http://127.0.0.1:8000/api/recipes').text
+class API():
 
-token = requests.post('http://127.0.0.1:8000/api/auth/token/', my_user).json()
+    def __init__(self, username=None, password=None):
+        self.username = username
+        self.password = password
+        self.header = self.__get_token()
 
-my_auth_token = token.get('access')
+    def __get_token(self):
+        my_user = {'username': self.username, 'password': self.password}
+        token = requests.post('http://127.0.0.1:8000/api/auth/token/', my_user).json()
+        my_auth_token = token.get('access')
+        my_header = {'Authorization': f'Token {my_auth_token}'}
+        return my_header
 
-my_header = {'Authorization': 'Token {}'.format(my_auth_token)}
+    def get_recipes(self, page_n=1):
+        recipe_list_endpoint = requests.get(
+            f'http://127.0.0.1:8000/api/recipes/?page={page_n}').json()
+        return recipe_list_endpoint['results']
 
-recipe_create_endpoint = requests.get('http://127.0.0.1:8000/api/recipes/create', headers=my_header).text
+    def post_recipe(self, title, description, ingredient_list, instructions, image_url=None):
+        my_recipe = {
+            "title": title,
+            "description": description,
+            "ingredients": [{"name": ingredient} for ingredient in ingredient_list],
+            "instructions": instructions,
+            "image_url": image_url
+        }
+        recipe_create_endpoint = requests.post(
+            f'http://127.0.0.1:8000/api/recipes/create', json=my_recipe, headers=self.header).json()
+        return recipe_create_endpoint
 
-print(recipe_create_endpoint)
+    def get_users(self, page_n=1):
+        user_list_endpoint = requests.get(
+            f'http://127.0.0.1:8000/api/users/?page={page_n}').json()
+        return user_list_endpoint['results']
