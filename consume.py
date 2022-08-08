@@ -36,3 +36,20 @@ class API():
         user_list_endpoint = requests.get(
             f'http://127.0.0.1:8000/api/users/?page={page_n}').json()
         return user_list_endpoint['results']
+
+    def create_user(self, username, email, email2, password):
+        my_user = {
+            "username": username,
+            "email": email,
+            "email2": email2,
+            "password": password
+        }
+        user_list_endpoint = requests.post(
+            'http://127.0.0.1:8000/api/users/register', json=my_user).json()
+        return user_list_endpoint
+
+    def favorite_recipe(self, recipe_id):
+
+        user_list_endpoint = requests.post(
+            f'http://127.0.0.1:8000/api/recipes/{recipe_id}/favorite', headers=self.header).json()
+        return user_list_endpoint
