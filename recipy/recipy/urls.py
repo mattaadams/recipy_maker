@@ -38,6 +38,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('', include('recipes.urls')),
+    path('', include('recommender.urls')),
     path(
         'api/',
         include(

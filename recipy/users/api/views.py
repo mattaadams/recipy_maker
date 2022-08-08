@@ -35,6 +35,7 @@ from recipes.api.serializers import RecipeListSerializer
 
 
 class UserCreateAPIView(CreateAPIView):
+    permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
 

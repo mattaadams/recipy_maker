@@ -60,6 +60,10 @@ class RecipeCommentListSerializer(serializers.ModelSerializer):
 class RecipeListSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientListSerializer(many=True, read_only=True)
     author = serializers.CharField(read_only=True)
+    # detail_url = serializers.HyperlinkedIdentityField(
+    #     view_name='recipe-api-detail',
+    #     lookup_field='pk'
+    # )
 
     class Meta:
 
@@ -71,6 +75,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
             'description',
             'ingredients',
             'instructions',
+            'favorites'
         ]
 
 
