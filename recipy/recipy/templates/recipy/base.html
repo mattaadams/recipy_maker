@@ -29,7 +29,8 @@
     </head>
     <body>
         <header class="site-header">
-            <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <nav id="gradient"
+                 class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
                 <div class="container">
                     <a class="navbar-brand mr-4" href="{% url 'recipe-home' %}">ReciPy</a>
                     <button class="navbar-toggler"
@@ -63,7 +64,7 @@
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{% url 'recipe-create' %}">Create a Recipe</a>
                                         <a class="dropdown-item" href="{% url 'favorite-recipe' %}">Favorite Recipes</a>
-                                        <a class="dropdown-item" href="#">Recommended Recipes</a>
+                                        <a class="dropdown-item" href="{% url 'recipe-recommendations' %}">Recommended Recipes</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="{% url 'swagger-schema' %}">Swagger API Docs</a>
                                     </div>

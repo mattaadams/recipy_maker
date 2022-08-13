@@ -6,6 +6,14 @@ from django.contrib.auth.models import User
 
 class Recommender(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # pred = models.CharField(max_length=200)
+    # board = ArrayField(
+    #     ArrayField(
+    #         models.CharField(max_length=10, blank=True),
+    #         size=8,
+    #     ),
+    #     size=8,
+    # )
 
     def __str__(self):
-        return f'Recommender for {self.user}'
+        return f'Recommendations for {self.user}'
