@@ -52,7 +52,7 @@ class RecipeListAPIView(ListAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeListSerializer
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['title', 'author__username', 'description', 'instructions']
+    search_fields = ['title','ingredients__name'] #'author__username', 'description', 'instructions']
     pagination_class = RecipePageNumberPagination
 
     @swagger_auto_schema(tags=['Recipes'])

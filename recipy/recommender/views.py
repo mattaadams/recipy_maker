@@ -28,8 +28,9 @@ class RecommenderListView(ListView):
         matrix = df_crosstab.to_numpy().reshape(1, -1)
         print(matrix)
         # model = read_pickle()
-        # pred = model.predict(User_favorites,matrix)
-        # recommendation =  Recommender.object.create(user,pred)
+        #distances, indices = model.neighbors(User_favorites,n_neighbors=10)
+
+        # recommendation =  Recommender.object.create(user,indices,distances)
         # recommendation.save()
 
         return Recipe.objects.filter(favorites=self.request.user).order_by('-date_posted')

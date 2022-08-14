@@ -18,8 +18,12 @@ from rest_framework.permissions import (
     IsAuthenticated,
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
-
 )
+from rest_framework.filters import (
+    SearchFilter,
+    OrderingFilter
+)
+
 from django.contrib.auth.models import User
 from recipes.models import Recipe, Comment
 
@@ -48,6 +52,8 @@ class UserListAPIView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserListSerializer
     pagination_class = UserPageNumberPagination
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['username']
 
     @swagger_auto_schema(operation_description="Return a list of users", tags=['Users'])
     def get(self, request, *args, **kwargs):
