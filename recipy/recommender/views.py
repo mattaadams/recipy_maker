@@ -14,8 +14,8 @@ class RecommenderListView(LoginRequiredMixin,ListView):
     context_object_name = 'recipes'
 
     def get_queryset(self):
-        n_favorites = Recipe.objects.filter(favorites=self.request.user.id)
-        if len(n_favorites) < 10:
+        favorites = Recipe.objects.filter(favorites=self.request.user.id)
+        if len(favorites) < 10:
             return None
              
         recipe_list = Recipe.objects.all()
@@ -37,7 +37,11 @@ class RecommenderListView(LoginRequiredMixin,ListView):
         return Recipe.objects.filter(id__in=recs).order_by('-date_posted')
 
     def _get_user_favorites(self,df,user_id):
-        return df.index[df[user_id]==True].tolist()
+        favorites = Recipe.objects.filter(favorites=self.request.user.id)
+        favorites_as_list = [fav.id for fav in favorites]
+        # Can also just pull from df, assuming user is in df (currently but could change)
+        # df.index[df[user_id]==True].tolist()
+        return favorites_as_list
 
     def _get_favs_vector(self,df,user_id):
         favs_vector = []
@@ -54,13 +58,14 @@ class RecommenderListView(LoginRequiredMixin,ListView):
         results = []
         knn_model = NearestNeighbors(metric='cosine',algorithm='brute')
         fit_model = knn_model.fit(matrix)
-        for recipe_id in self._get_user_favorites(df,user_id)[-10:]:
+        user_favorites = self._get_user_favorites(df,user_id)
+        for recipe_id in user_favorites[-10:]:
             input_ = df.loc[recipe_id].values.reshape(1,-1)
             distances,indices = fit_model.kneighbors(input_, n_neighbors=10)
             distances = distances.flatten().tolist()
             indices = indices.flatten().tolist()
             for i in range(len(distances)):
-                if indices[i] not in self._get_user_favorites(df,user_id) and distances[i] > 0.1:
+                if indices[i] not in user_favorites and distances[i] > 0.1:
                     results.append([indices[i],distances[i]])
 
         res = pd.DataFrame(results,columns=['indices','distances']).groupby(['indices']).sum()
