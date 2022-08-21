@@ -1,5 +1,9 @@
 {% extends "recipy/base.html" %}
 {% block content %}
+    {% if user.favorites.count < 10 %}
+    <h2 class="mb-3 white_text" style="min-height: 85vh;">Please favorite at least 10 recipes in order to receive recommendations</h2>
+
+    {%else %}
     <h1 class="mb-3">Recommendations for {{ user }}</h1>
     <div class="row">
         {% for recipe in recipes %}
@@ -31,6 +35,7 @@
             </div>
         {% endfor %}
     </div>
+    {% endif %}
     {% if is_paginated %}
         {% if page_obj.has_previous %}
             <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
@@ -51,4 +56,5 @@
                href="?page={{ page_obj.paginator.num_pages }}">Last</a>
         {% endif %}
     {% endif %}
+
 {% endblock content %}

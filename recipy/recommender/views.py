@@ -6,14 +6,18 @@ from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.forms.models import model_to_dict
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-
-class RecommenderListView(ListView):
+class RecommenderListView(LoginRequiredMixin,ListView):
     model = Recipe
     template_name = 'recommender/recommended_recipes.html'
     context_object_name = 'recipes'
 
     def get_queryset(self):
+        n_favorites = Recipe.objects.filter(favorites=self.request.user.id)
+        if len(n_favorites) < 10:
+            return None
+             
         recipe_list = Recipe.objects.all()
 
         rec_list = []
