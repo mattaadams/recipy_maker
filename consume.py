@@ -24,7 +24,7 @@ class API():
     def get_one_recipe(self, recipe_id=1):
         recipe_list_endpoint = requests.get(
             f'http://127.0.0.1:8000/api/recipes/{recipe_id}').json()
-        return recipe_list_endpoint['results']
+        return recipe_list_endpoint
 
     def create_recipe(self, title, description, ingredient_list, instructions, image_url=None):
         my_recipe = {
@@ -46,7 +46,7 @@ class API():
     def get_one_user(self, user_id=1):
         user_list_endpoint = requests.get(
             f'http://127.0.0.1:8000/api/users/{user_id}').json()
-        return user_list_endpoint['results']
+        return user_list_endpoint
 
     def create_user(self, username, email, email2, password):
         my_user = {

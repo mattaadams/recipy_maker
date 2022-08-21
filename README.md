@@ -8,9 +8,11 @@ Data was obtained by using the Beautiful Soup library for web scraping.
 
 ## REST API:
 
-## Recommendation System Model:
+Simple API implemented using DJango REST Framework library
 
-Model-based collaborative filtering
+## Recommendation System:
+
+Unsupervised nearest neighbors MEMORY based item based collaborative filtering
 
 ## Libraries utilized:
 
