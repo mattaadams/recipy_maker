@@ -54,7 +54,7 @@
             <p class="article-content">{{ object.instructions }}</p>
         </div>
     </article>
-    <h2>Comments</h2>
+    <h2 class="white_text">Comments</h2>
     {% if user.is_authenticated %}
         <div class="content-section">
             <form method="POST">
@@ -75,7 +75,7 @@
         </div>
     {% endif %}
     {% if not recipe.comments.all %}
-        <p>No Comments Yet</p>
+        <p class="white_text">No Comments Yet</p>
     {% else %}
         {% for comment in object.comments.all %}
             <article class="media content-section">

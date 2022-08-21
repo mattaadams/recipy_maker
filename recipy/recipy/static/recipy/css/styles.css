@@ -89,6 +89,10 @@ a.article-title:hover {
   font-size: 2.5rem;
 }
 
+.white_text {
+  color: #ffffff;
+}
+
 /*************************************************
  *  Hugo Academic: an academic theme for Hugo.
  *  Designed by @GeorgeCushen.

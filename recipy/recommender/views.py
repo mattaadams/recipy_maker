@@ -25,12 +25,44 @@ class RecommenderListView(ListView):
 
         df = pd.DataFrame(rec_list, columns=['id', 'favorites']).explode('favorites')
         df_crosstab = pd.crosstab(index=df['id'], columns=df['favorites'])
-        matrix = df_crosstab.to_numpy().reshape(1, -1)
-        print(matrix)
-        # model = read_pickle()
-        #distances, indices = model.neighbors(User_favorites,n_neighbors=10)
+        matrix = df_crosstab.to_numpy()
+        favorites_vector  = self._get_favs_vector(df_crosstab,self.request.user.id)
+        most_similar_dict = self._get_recommendations(matrix,df_crosstab,self.request.user.id)
+        recs = list(most_similar_dict.keys())
 
-        # recommendation =  Recommender.object.create(user,indices,distances)
-        # recommendation.save()
+        return Recipe.objects.filter(id__in=recs).order_by('-date_posted')
 
-        return Recipe.objects.filter(favorites=self.request.user).order_by('-date_posted')
+    def _get_user_favorites(self,df,user_id):
+        return df.index[df[user_id]==True].tolist()
+
+    def _get_favs_vector(self,df,user_id):
+        favs_vector = []
+        col_values = df.columns.values.tolist()
+        favorites_list = self._get_user_favorites(df,user_id)
+        for col in col_values:
+            if col in favorites_list:
+                favs_vector.append(1)
+            else:
+                favs_vector.append(0)
+        return favs_vector
+
+    def _get_recommendations(self,matrix,df,user_id):
+        results = []
+        knn_model = NearestNeighbors(metric='cosine',algorithm='brute')
+        fit_model = knn_model.fit(matrix)
+        for recipe_id in self._get_user_favorites(df,user_id)[-10:]:
+            input_ = df.loc[recipe_id].values.reshape(1,-1)
+            distances,indices = fit_model.kneighbors(input_, n_neighbors=10)
+            distances = distances.flatten().tolist()
+            indices = indices.flatten().tolist()
+            for i in range(len(distances)):
+                if indices[i] not in self._get_user_favorites(df,user_id) and distances[i] > 0.1:
+                    results.append([indices[i],distances[i]])
+
+        res = pd.DataFrame(results,columns=['indices','distances']).groupby(['indices']).sum()
+        res = res.sort_values(by=['distances'],ascending=False)
+        most_similar = res.head(9)
+        most_similar_dict = pd.Series(most_similar.distances.values,index=most_similar.index).to_dict()
+        return most_similar_dict
+
+
