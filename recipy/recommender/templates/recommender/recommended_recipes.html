@@ -1,41 +1,42 @@
 {% extends "recipy/base.html" %}
 {% block content %}
     {% if user.favorites.count < 10 %}
-    <h2 class="mb-3 white_text" style="min-height: 85vh;">Please favorite at least 10 recipes in order to receive recommendations</h2>
-
-    {%else %}
-    <h1 class="mb-3">Recommendations for {{ user }}</h1>
-    <div class="row">
-        {% for recipe in recipes %}
-            <div class="col-md-4">
-                <div class="card">
-                    {% if not recipe.image_url %}
-                        <a href="{% url 'recipe-detail' recipe.id %}"
-                           title
-                           class="card-image hover-overlay">
-                            <img src="{{ recipe.image.url }}" class="img-responsive">
-                        </a>
-                    {% else %}
-                        <a href="{% url 'recipe-detail' recipe.id %}"
-                           title
-                           class="card-image hover-overlay">
-                            <img src="{{ recipe.image_url }}" class="img-responsive">
-                        </a>
-                    {% endif %}
-                    <div class="card-text">
-                        <h4>
-                            <a href="{% url 'recipe-detail' recipe.id %}">{{ recipe.title }}</a>
-                        </h4>
-                        <div class="card-description">
-                            <span>Author:</span>
-                            <a href="{% url 'user-recipe' recipe.author.username %}">{{ recipe.author }}</a>
-                            {% comment %} <button type="button">Click Me!</button> {% endcomment %}
+        <h2 class="mb-3 white_text" style="min-height: 85vh;">
+            Please favorite at least 10 recipes in order to receive recommendations
+        </h2>
+    {% else %}
+        <h1 class="mb-3">Recommendations for {{ user }}</h1>
+        <div class="row">
+            {% for recipe in recipes %}
+                <div class="col-md-4">
+                    <div class="card">
+                        {% if not recipe.image_url %}
+                            <a href="{% url 'recipe-detail' recipe.id %}"
+                               title
+                               class="card-image hover-overlay">
+                                <img src="{{ recipe.image.url }}" class="img-responsive">
+                            </a>
+                        {% else %}
+                            <a href="{% url 'recipe-detail' recipe.id %}"
+                               title
+                               class="card-image hover-overlay">
+                                <img src="{{ recipe.image_url }}" class="img-responsive">
+                            </a>
+                        {% endif %}
+                        <div class="card-text">
+                            <h4>
+                                <a href="{% url 'recipe-detail' recipe.id %}">{{ recipe.title }}</a>
+                            </h4>
+                            <div class="card-description">
+                                <span>Author:</span>
+                                <a href="{% url 'user-recipe' recipe.author.username %}">{{ recipe.author }}</a>
+                                {% comment %} <button type="button">Click Me!</button> {% endcomment %}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
     {% endif %}
     {% if is_paginated %}
         {% if page_obj.has_previous %}
@@ -57,5 +58,4 @@
                href="?page={{ page_obj.paginator.num_pages }}">Last</a>
         {% endif %}
     {% endif %}
-
 {% endblock content %}

@@ -53,6 +53,8 @@ def profile(request):
     return render(request, 'users/profile.html', context)
 
 
+
+
 class FavoriteRecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
     template_name = 'users/favorites.html'

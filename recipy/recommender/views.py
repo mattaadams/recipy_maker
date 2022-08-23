@@ -36,7 +36,7 @@ class RecommenderListView(LoginRequiredMixin,ListView):
 
         return Recipe.objects.filter(id__in=recs).order_by('-date_posted')
 
-    def _get_user_favorites(self,df,user_id):
+    def _get_user_favorites(self,user_id):
         favorites = Recipe.objects.filter(favorites=self.request.user.id)
         favorites_as_list = [fav.id for fav in favorites]
         # Can also just pull from df, assuming user is in df (currently but could change)
@@ -46,7 +46,7 @@ class RecommenderListView(LoginRequiredMixin,ListView):
     def _get_favs_vector(self,df,user_id):
         favs_vector = []
         col_values = df.columns.values.tolist()
-        favorites_list = self._get_user_favorites(df,user_id)
+        favorites_list = self._get_user_favorites(user_id)
         for col in col_values:
             if col in favorites_list:
                 favs_vector.append(1)
@@ -58,7 +58,7 @@ class RecommenderListView(LoginRequiredMixin,ListView):
         results = []
         knn_model = NearestNeighbors(metric='cosine',algorithm='brute')
         fit_model = knn_model.fit(matrix)
-        user_favorites = self._get_user_favorites(df,user_id)
+        user_favorites = self._get_user_favorites(user_id)
         for recipe_id in user_favorites[-10:]:
             input_ = df.loc[recipe_id].values.reshape(1,-1)
             distances,indices = fit_model.kneighbors(input_, n_neighbors=10)
