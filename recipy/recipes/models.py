@@ -3,11 +3,11 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
-
+from .validators import validate_file_extension,file_size
 
 class Recipe(models.Model):
     title = models.CharField(max_length=120)
-    image = models.ImageField(default='default_food.png', upload_to='recipe_pics')
+    image = models.ImageField(default='default_food.png', upload_to='recipe_pics',validators=[validate_file_extension,file_size])
     # Slug
     image_url = models.URLField(max_length=300, null=True, blank=True)
     description = models.TextField()
@@ -30,8 +30,7 @@ class Recipe(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.image.path)
-
-
+            
 class Ingredient(models.Model):
     recipe = models.ForeignKey(Recipe, related_name="ingredients", on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
