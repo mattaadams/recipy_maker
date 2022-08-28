@@ -16,3 +16,6 @@ var/
 .installed.cfg
 *.egg
 .vscode/
+*png
+*jpg
+*jpeg
